@@ -46,7 +46,7 @@ const play = async (p, years) => { for (let i = 0; i < 5; i++) { await p.fill('#
 for (const [w, h] of [[390, 844], [1280, 800]]) {
   const tag = `@${w}`, p = await page(w, h);
   await p.goto(base); await p.waitForTimeout(400);
-  ok(await p.locator('meta[name=robots][content="noindex,nofollow"]').count() === 1, `${tag} noindex meta`);
+  ok((await p.locator('meta[name=robots]').count()) === 0, `${tag} no noindex meta (the live site may be indexed)`);
   ok((await p.getAttribute('.foot a', 'href')) === 'https://www.afternic.com/domain/beautyexhibit.com' && /for sale/.test(await p.textContent('.foot')), `${tag} for-sale footer link`);
   ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${tag} no sideways scroll`);
   const lock = await p.locator('#lock').boundingBox();
@@ -210,7 +210,7 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   await q.context().close();
 }
 // robots.txt
-{ const r = await (await fetch(base + 'robots.txt')).text(); ok(/Disallow: \//.test(r), 'robots.txt disallows all'); }
+{ const r = await (await fetch(base + 'robots.txt')).text(); ok(/Allow: \//.test(r) && /Sitemap:/.test(r), 'robots.txt allows all and names the sitemap'); }
 await b.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

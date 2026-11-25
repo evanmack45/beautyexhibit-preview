@@ -154,11 +154,48 @@ h1 i { color: var(--gold); font-style: normal; font-weight: 500; }
 /* === generated art === */
 .mast { position: relative; background: #f3e7d6; color: var(--ink); overflow: hidden; min-height: 280px; }
 .mast-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; pointer-events: none; z-index: 0; }
-.mast::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 48%; background: linear-gradient(to bottom, #f3e7d6 55%, rgba(243,231,214,0)); pointer-events: none; z-index: 1; }
+/* Quiet zone for the mast type: the accessories fade into the cream paper
+   under the title and lede, so hat and fan lines recede instead of sitting
+   in the letters. The frieze stays visible below and (on a wide screen) to
+   the right. No extra image and no layout shift (the art is already
+   position:absolute). */
+.mast-art {
+  -webkit-mask-image: linear-gradient(to bottom,
+    rgba(0,0,0,.04) 0%,
+    rgba(0,0,0,.08) 28%,
+    rgba(0,0,0,.16) 48%,
+    rgba(0,0,0,.36) 62%,
+    rgba(0,0,0,.82) 76%,
+    #000 90%);
+  mask-image: linear-gradient(to bottom,
+    rgba(0,0,0,.04) 0%,
+    rgba(0,0,0,.08) 28%,
+    rgba(0,0,0,.16) 48%,
+    rgba(0,0,0,.36) 62%,
+    rgba(0,0,0,.82) 76%,
+    #000 90%);
+}
+/* A short cream cap under the title; the mask carries the rest so the
+   lede is not left on the hats. Was a 48% overlay that faded too soon. */
+.mast::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 26%; background: linear-gradient(to bottom, #f3e7d6 72%, rgba(243,231,214,0)); pointer-events: none; z-index: 1; }
 .mast-copy { position: relative; z-index: 2; max-width: 1180px; margin: 0 auto; padding: 24px 20px 140px; }
 .mast h1 { color: var(--ink); font-size: clamp(48px, 8vw, 88px); }
 .mast h1 i { color: #8a6a2c; }
-.mast .lede { color: #5c4a3a; max-width: 34ch; margin-top: 10px; }
+.mast .lede {
+  color: #5c4a3a;
+  max-width: 34ch;
+  margin-top: 10px;
+  /* Soft cream halo so leftover hat lines cannot sit inside the letters. */
+  text-shadow:
+    0 0 6px #f3e7d6,
+    0 0 12px #f3e7d6,
+    0 0 18px #f3e7d6,
+    1px 0 0 #f3e7d6,
+    -1px 0 0 #f3e7d6,
+    0 1px 0 #f3e7d6,
+    0 -1px 0 #f3e7d6;
+}
+
 .frieze { display: block; width: 100%; height: 72px; object-fit: cover; object-position: center; background: #f3e7d6; }
 .about { position: relative; }
 .about::after { content: ""; display: table; clear: both; }
@@ -166,7 +203,23 @@ h1 i { color: var(--gold); font-style: normal; font-weight: 500; }
 @media (min-width: 900px) {
   .mast { min-height: 560px; }
   .mast-copy { padding: 36px 20px 300px; }
-  .mast .lede { max-width: 32ch; margin-left: 11.5rem; }
+  .mast-art {
+    -webkit-mask-image: linear-gradient(105deg,
+      rgba(0,0,0,.06) 0%,
+      rgba(0,0,0,.12) 26%,
+      rgba(0,0,0,.28) 36%,
+      rgba(0,0,0,.62) 46%,
+      rgba(0,0,0,.92) 56%,
+      #000 66%);
+    mask-image: linear-gradient(105deg,
+      rgba(0,0,0,.06) 0%,
+      rgba(0,0,0,.12) 26%,
+      rgba(0,0,0,.28) 36%,
+      rgba(0,0,0,.62) 46%,
+      rgba(0,0,0,.92) 56%,
+      #000 66%);
+  }
+  .mast .lede { max-width: 32ch; margin-left: 0; }
   .frieze { height: 96px; }
   .still { width: 260px; }
 }
