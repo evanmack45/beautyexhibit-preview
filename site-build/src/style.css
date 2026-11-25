@@ -32,6 +32,10 @@ h1 i { color: var(--gold); font-style: normal; font-weight: 500; }
 .piece { margin: 0; display: flex; flex-direction: column; align-items: center; }
 .frame { background: var(--cream); padding: 10px; border: 5px solid var(--gold); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(36, 25, 19, 0.25); line-height: 0; }
 .frame img { display: block; max-height: 42vh; max-height: 42svh; width: auto; max-width: 100%; height: auto; background: #d9cbb7; }
+/* The round image gets a definite width from its aspect ratio, so its box is sized before the file arrives. */
+#art { --h: 36vh; --side: calc(100vw - 64px); max-height: none; max-width: none; height: auto; aspect-ratio: var(--ar, 0.75); width: min(var(--side), calc(var(--h) * var(--ar, 0.75))); }
+@supports (height: 1svh) { #art { --h: 36svh; } }
+@media (min-width: 900px) { #art { --h: 70vh; --side: calc(min(100vw, 1180px) - 560px); } }
 .count { margin-top: 8px; font-size: 14px; color: var(--mute); }
 
 .panel { width: 100%; max-width: 460px; justify-self: center; }
@@ -140,3 +144,6 @@ h1 i { color: var(--gold); font-style: normal; font-weight: 500; }
   .end .recap img { display: none; }
 }
 .look, .then, .lede, .credit, .about p, .off { text-wrap: pretty; }
+/* Inline links keep a 24px tap height. */
+.all a, .foot a, .toplink { padding-block: 3px; }
+.brand { line-height: 1.2; }

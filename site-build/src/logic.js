@@ -17,9 +17,10 @@ export const ERAS = [[1790, 1819], [1820, 1849], [1850, 1879], [1880, 1909], [19
 export const eraOf = (year) => ERAS.findIndex(([a, b]) => year >= a && year <= b);
 
 // Current games: one seeded image per era, then a seeded shuffle of the five.
-export function pickSpread(seed, years) {
+// Images marked legacyOnly stay in old links but are left out of new games.
+export function pickSpread(seed, years, skip = []) {
   const rnd = mulberry32(seed), buckets = ERAS.map(() => []);
-  years.forEach((y, i) => buckets[eraOf(y)].push(i));
+  years.forEach((y, i) => { if (!skip[i]) buckets[eraOf(y)].push(i); });
   const out = buckets.map((b) => b[Math.floor(rnd() * b.length)]);
   for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
   return out;
@@ -27,7 +28,7 @@ export function pickSpread(seed, years) {
 
 // Image indexes for a game. Old #s= links replay over the frozen first 42 images.
 export function game(seed, legacy, images, legacyIds) {
-  if (!legacy) return pickSpread(seed, images.map((r) => r.year));
+  if (!legacy) return pickSpread(seed, images.map((r) => r.year), images.map((r) => !!r.legacyOnly));
   const at = new Map(images.map((r, i) => [r.id, i]));
   return pick(seed, legacyIds.length).map((i) => at.get(legacyIds[i]));
 }

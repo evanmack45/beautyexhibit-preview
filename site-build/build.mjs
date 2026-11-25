@@ -27,9 +27,9 @@ for (const r of raw) {
   if (!existsSync(join(here, 'src/img', `${r.id}.webp`))) fail(`missing image ${r.id}`);
 }
 if (legacyIds.length !== 42 || legacyIds.some((id, i) => raw[i]?.id !== id)) fail('legacy ids must stay the first 42 records, in order');
-const perEra = ERAS.map((_, e) => raw.filter((r) => eraOf(r.year) === e).length);
+const perEra = ERAS.map((_, e) => raw.filter((r) => !r.legacyOnly && eraOf(r.year) === e).length);
 if (perEra.some((n) => n < 20)) fail(`an era has fewer than 20 images: ${perEra}`);
-const images = raw.map(({ id, year, title, artist, look, license, licenseTags, source, holder, w, h }) => ({ id, year, title, artist, look, license, licenseTags, source, holder, w, h }));
+const images = raw.map(({ id, year, title, artist, look, license, licenseTags, source, holder, w, h, legacyOnly }) => ({ id, year, title, artist, look, license, licenseTags, source, holder, w, h, ...(legacyOnly ? { legacyOnly: true } : {}) }));
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const first = images[game(DEFAULT_SEED, false, images, legacyIds)[0]];
@@ -67,7 +67,7 @@ const html = `<!doctype html>
     <p class="friend" id="friend-top" hidden></p>
   </div>
   <figure class="piece" id="piece">
-    <div class="frame"><img id="art" src="img/${first.id}.webp" width="${first.w}" height="${first.h}" alt="Image 1 of ${ROUNDS}. ${esc(first.look)}" decoding="async"></div>
+    <div class="frame"><img id="art" src="img/${first.id}.webp" width="${first.w}" height="${first.h}" style="--ar:${(first.w / first.h).toFixed(4)}" alt="Image 1 of ${ROUNDS}. ${esc(first.look)}" decoding="async"></div>
     <figcaption class="count" id="count">Image 1 of ${ROUNDS}</figcaption>
   </figure>
   <div class="wall" id="wall" hidden aria-hidden="true"></div>

@@ -20,7 +20,9 @@ ok(new Set(L.game(7, false, images, legacyIds)).size === 5, 'a game gives 5 dist
   const seen = new Set(); let spread = true, N = 4000;
   for (let s = 1; s <= N; s++) { const g = L.game(s, false, images, legacyIds); g.forEach((i) => seen.add(i)); if (new Set(g.map((i) => L.eraOf(images[i].year))).size !== 5) spread = false; }
   ok(spread, `every one of ${N} games has one image from each of the 5 eras`);
-  ok(seen.size === images.length, `all ${images.length} images reachable (${seen.size})`);
+  const live = images.filter((r) => !r.legacyOnly).length;
+  ok(seen.size === live, `all ${live} images in new games reachable (${seen.size})`);
+  ok([...seen].every((i) => !images[i].legacyOnly), 'legacy-only images never appear in new games');
   let share = 0; for (let s = 1; s <= N; s++) { const a = L.game(s, false, images, legacyIds), c = L.game(s + 7777777, false, images, legacyIds); if (a.some((i) => c.includes(i))) share++; }
   ok(share / N < 0.2, `two random games share an image ${(100 * share / N).toFixed(1)}% of the time`);
 }
@@ -162,6 +164,16 @@ for (const h of ['#s=', '#s=zzzzzzzz', '#s=abc.999', '#s=0', '#garbage', '#s=abc
   await p.goto(base);
   ok(await p.evaluate(() => document.getElementById('art').complete && document.getElementById('art').naturalWidth > 0), 'no JS: first image shows');
   ok(/needs JavaScript/.test(await p.textContent('noscript')), 'no JS: says guessing needs JavaScript');
+  await p.context().close();
+}
+// the round image has its size before the file arrives, so the panel does not jump
+for (const [w, h] of [[390, 844], [1280, 800]]) {
+  const p = await page(w, h);
+  await p.route('**/img/*.webp', async (r) => { await new Promise((ok) => setTimeout(ok, 1500)); r.continue(); });
+  await p.goto(base, { waitUntil: 'domcontentloaded' }); await p.waitForTimeout(400);
+  const before = (await p.locator('#panel').boundingBox()).y; await p.waitForTimeout(2000);
+  const after = (await p.locator('#panel').boundingBox()).y;
+  ok(Math.abs(before - after) < 2, `@${w} panel stays put while the image loads (${Math.round(before)} then ${Math.round(after)})`);
   await p.context().close();
 }
 // robots.txt

@@ -1,0 +1,101 @@
+[
+  {
+    "url": "https://evanmack45.github.io/beautyexhibit-preview/",
+    "viewport": "phone",
+    "issues": [
+      "P1 83 tap targets under 24px"
+    ],
+    "shots": [
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__fold.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__scroll025.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__scroll050.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__scroll075.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__scroll100.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__full.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__phone__reduced-motion.png"
+    ],
+    "loadMs": 663,
+    "framePacing": {
+      "frames": 246,
+      "p50": 16.699999999999818,
+      "p95": 16.800000000000182,
+      "over50ms": 0
+    },
+    "dom": {
+      "overflowX": 0,
+      "wide": [],
+      "tinyText": 0,
+      "imgsNoAlt": 0,
+      "brokenImgs": 0,
+      "smallTapTargets": 83,
+      "h1": 1,
+      "ogImage": true,
+      "canvases": 0,
+      "fonts": [
+        "\"Bodoni Moda\"",
+        "Jost"
+      ],
+      "title": "Beauty Year: guess when it was the look"
+    },
+    "axe": [],
+    "consoleErrors": [],
+    "badRequests": []
+  },
+  {
+    "url": "https://evanmack45.github.io/beautyexhibit-preview/",
+    "viewport": "desktop",
+    "issues": [],
+    "shots": [
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__fold.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__scroll025.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__scroll050.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__scroll075.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__scroll100.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__full.png",
+      "/workspace/sites/beautyexhibit.com/qa/live-v2-1280/evanmack45-github-io-beautyexhibit-preview__desktop__reduced-motion.png"
+    ],
+    "loadMs": 653,
+    "framePacing": {
+      "frames": 240,
+      "p50": 16.699999999999818,
+      "p95": 16.799999999999272,
+      "over50ms": 0
+    },
+    "dom": {
+      "overflowX": 0,
+      "wide": [],
+      "tinyText": 0,
+      "imgsNoAlt": 0,
+      "brokenImgs": 0,
+      "smallTapTargets": 170,
+      "h1": 1,
+      "ogImage": true,
+      "canvases": 0,
+      "fonts": [
+        "\"Bodoni Moda\"",
+        "Jost"
+      ],
+      "title": "Beauty Year: guess when it was the look"
+    },
+    "axe": [],
+    "consoleErrors": [],
+    "badRequests": []
+  },
+  {
+    "url": "https://evanmack45.github.io/beautyexhibit-preview/",
+    "viewport": "lighthouse-mobile",
+    "scores": {
+      "performance": 85,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 63
+    },
+    "LCP": "2.0 s",
+    "CLS": "0.292",
+    "TBT": "10 ms",
+    "weight": "Total size was 344 KiB",
+    "issues": [
+      "P1 CLS 0.292 (budget 0.1)"
+    ]
+  }
+]

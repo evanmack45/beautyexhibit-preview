@@ -19,7 +19,7 @@ function start(s, friendScore, old = false) {
 
 function show() {
   const r = order[round], art = $('art');
-  art.src = `img/${r.id}.webp`; art.width = r.w; art.height = r.h;
+  art.src = `img/${r.id}.webp`; art.width = r.w; art.height = r.h; art.style.setProperty('--ar', (r.w / r.h).toFixed(4));
   art.alt = `Image ${round + 1} of ${ROUNDS}. ${r.look}`;
   $('count').textContent = `Image ${round + 1} of ${ROUNDS}`;
   $('piece').hidden = false;
