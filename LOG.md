@@ -49,8 +49,8 @@ Live at https://evanmack45.github.io/beautyexhibit-preview/ (commits c0883e7 and
   - Harvest scripts are data/raw/commons2.py (categories) and data/raw/commons-search.py (search, for the thin 1840s, 1860s and 1890s).
 
 ## Exclusions (new candidates, 181 shortlisted from 1,092 harvested)
-- Children in the picture, 20: n43, n57, n78, n82, n88, n93, n135, m4, m7, m12, m13, m14, m16, m17, m18, m19, m20, m21, m25, m27, m30, n81. A keyword filter also dropped more candidates before the shortlist.
-- Text-heavy ads, covers or mastheads where the date or most of the image is print, 14: n76, n77, n80, n84 (a year printed under every figure), n90, n97, n99, n101, n112, n113, n114, n115, n116, n117, n136.
+- Children in the picture, 22: n43, n57, n78, n82, n88, n93, n135, m4, m7, m12, m13, m14, m16, m17, m18, m19, m20, m21, m25, m27, m30, n81. A keyword filter also dropped more candidates before the shortlist.
+- Text-heavy ads, covers or mastheads where the date or most of the image is print, 15: n76, n77, n80, n84 (a year printed under every figure), n90, n97, n99, n101, n112, n113, n114, n115, n116, n117, n136.
 - Period costume or carnival dress, not a fashion of its year: n60, n61, n107, n109. Satire: n32 (crowd caricature).
 - Duplicates or near duplicates: n8 (same plate as n2), n108 (same sheet as n104).
 - The commons date does not match the year in the file name: n49 (1832 vs 1834), n51 (1835 vs 1834), n103 (1902 vs Jan 1903).
