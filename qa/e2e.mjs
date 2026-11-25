@@ -191,6 +191,17 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   ok(png.readUInt32BE(16) === 1080 && png.readUInt32BE(20) === 1350, 'r4 curator card is 1080x1350');
   ok(/verdict-curator-1024\.webp/.test(imgs), 'r4: curator object is drawn into the share canvas');
   await p.context().close();
+  // the call-to-play line must sit clearly below the "said <year>" row (it overprinted it once)
+  const t = await page(390, 844, { acceptDownloads: true });
+  await t.addInitScript(() => { window.__ft = []; const o = CanvasRenderingContext2D.prototype.fillText; CanvasRenderingContext2D.prototype.fillText = function (s, x, y, ...r) { window.__ft.push([String(s), y]); return o.call(this, s, x, y, ...r); }; });
+  await t.goto(`${base}#g=${(987654).toString(36)}`);
+  await play(t, set.map((r) => r.year));
+  await Promise.all([t.waitForEvent('download'), t.click('#save')]);
+  const ft = await t.evaluate(() => window.__ft);
+  const saidY = Math.max(...ft.filter(([s]) => /^said /.test(s)).map(([, y]) => y)), ctaY = (ft.find(([s]) => /^Can you beat it/.test(s)) || [, -1])[1];
+  ok(ft.filter(([s]) => /^said /.test(s)).length === 5 && !ft.some(([s]) => /undefined/.test(s)), 'share card: five "said <year>" lines, none undefined');
+  ok(ctaY - saidY >= 44, `share card: call to play sits below the guesses row (said y ${saidY}, call y ${ctaY})`);
+  await t.context().close();
   const q = await page(390, 844);
   await q.goto(base);
   const far = house().map((r) => r.year <= 1860 ? 1940 : 1790);

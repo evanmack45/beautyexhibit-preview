@@ -186,9 +186,11 @@ async function card() {
     x.fillStyle = '#f3e7d6'; x.font = '600 46px "Bodoni Moda"'; x.fillText(String(r.year), cx + cw / 2, top + ch + 64);
     x.fillStyle = '#e8b9b0'; x.font = '500 26px "Jost"'; x.fillText(`said ${guesses[i]}`, cx + cw / 2, top + ch + 104);
   });
+  // The call to play sits under the guesses row, which moves down when the top plate is tall.
+  const ctaY = Math.max(1110, top + ch + 104 + 66);
   x.fillStyle = '#f3e7d6'; x.font = '500 34px "Jost"';
-  x.fillText('Can you beat it? Play Beauty Year at', W / 2, 1110);
-  x.fillStyle = '#c9a46a'; x.font = '500 30px "Jost"'; x.fillText(publicFooter('').replace(/#$/, '').replace(/\/$/, ''), W / 2, 1160);
+  x.fillText('Can you beat it? Play Beauty Year at', W / 2, ctaY);
+  x.fillStyle = '#c9a46a'; x.font = '500 30px "Jost"'; x.fillText(publicFooter('').replace(/#$/, '').replace(/\/$/, ''), W / 2, ctaY + 48);
   x.fillStyle = '#9c8b7a'; x.font = '500 24px "Jost"'; x.fillText('Images public domain or CC0, via Wikimedia Commons', W / 2, 1270);
   return cv;
 }
