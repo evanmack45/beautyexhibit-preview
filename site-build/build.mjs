@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { pick, ROUNDS, MIN_YEAR, MAX_YEAR, MAX_POINTS } from './src/logic.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const out = join(here, 'docs');
+const out = join(here, '..', 'docs');
 const SITE = 'https://evanmack45.github.io/beautyexhibit-preview/';
 const AFTERNIC = 'https://www.afternic.com/domain/beautyexhibit.com';
 const DEFAULT_SEED = 20261125;
