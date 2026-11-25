@@ -1,4 +1,14 @@
-# DONE 2026-11-25 2:46 AM CT (Gizmo): Beauty Year pool grown from 42 to 168 verified PD/CC0 images, live
+# DONE 2026-11-25 2:53 AM CT (Gizmo): B1 small refresh live (commit 0274946)
+
+- Intro line, meta description and og:description now say fashion plates, one from each era between the 1790s and the 1930s.
+- og.png was regenerated with three plates (n5, n66, n125).
+- qa/beauty-year-390.gif and qa/beauty-year-1280.gif were regenerated from the current build.
+- Live index.html, og.png, app.js and style.css match the local build by md5.
+- e2e live: 136 passed, 0 failed.
+- Gate 390 + 1440 (qa/live-v4): PASS, no P1. Lighthouse 99, CLS 0.
+- Gate 1280 (qa/live-v4-1280): PASS, no P1. Lighthouse 100, CLS 0.
+
+## Earlier: DONE 2026-11-25 2:46 AM CT (Gizmo): Beauty Year pool grown from 42 to 168 verified PD/CC0 images, live
 
 Live at https://evanmack45.github.io/beautyexhibit-preview/ (commits c0883e7 and 32d9886 on master). Live files match the local build by md5 (index.html, app.js, logic.js, style.css, robots.txt, sample images). Pages cname is null. No DNS, Afternic or registrar changes. Nothing posted, nobody messaged.
 

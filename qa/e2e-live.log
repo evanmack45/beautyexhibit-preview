@@ -39,7 +39,7 @@ ok   every image has a Commons source, license and year
 ok   @390 noindex meta
 ok   @390 for-sale footer link
 ok   @390 no sideways scroll
-ok   @390 lock button in first screen (783 of 844)
+ok   @390 lock button in first screen (806 of 844)
 ok   @390 house set first image
 ok   @390 image loaded
 ok   @390 slider arrows update the year box
@@ -71,7 +71,7 @@ ok   @390 no console errors
 ok   @1280 noindex meta
 ok   @1280 for-sale footer link
 ok   @1280 no sideways scroll
-ok   @1280 lock button in first screen (486 of 800)
+ok   @1280 lock button in first screen (512 of 800)
 ok   @1280 house set first image
 ok   @1280 image loaded
 ok   @1280 slider arrows update the year box
@@ -131,8 +131,8 @@ ok   #about keeps the game and the anchor
 ok   credits list has every image with a source link
 ok   no JS: first image shows
 ok   no JS: says guessing needs JavaScript
-ok   @390 panel stays put while the image loads (525 then 525)
-ok   @1280 panel stays put while the image loads (213 then 213)
+ok   @390 panel stays put while the image loads (548 then 548)
+ok   @1280 panel stays put while the image loads (238 then 238)
 ok   robots.txt disallows all
 
 136 passed, 0 failed
