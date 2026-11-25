@@ -7,3 +7,5 @@ data/raw/crop/
 data/raw/*.jpg
 qa/shots/
 docs/qa-snap/
+data/raw/crop2/
+data/raw/sheets2/

@@ -1,16 +1,16 @@
-import { pick, points, readYear, encode, decode, verdict, ROUNDS, MIN_YEAR, MAX_YEAR, MAX_POINTS, MAX_SEED } from './logic.js';
+import { game, points, readYear, encode, decode, verdict, ROUNDS, MIN_YEAR, MAX_YEAR, MAX_POINTS, MAX_SEED } from './logic.js';
 
 const $ = (id) => document.getElementById(id);
-const images = JSON.parse($('images').textContent);
+const images = JSON.parse($('images').textContent), legacyIds = JSON.parse($('legacy').textContent);
 const room = $('room'), DEFAULT_SEED = Number(room.dataset.seed);
 const NOW = new Date().getFullYear();
 const num = (n) => n.toLocaleString('en-US');
-let seed, order, round, guesses, friend;
+let seed, legacy, order, round, guesses, friend;
 
-function start(s, friendScore) {
-  seed = s; friend = friendScore; round = 0; guesses = [];
-  order = pick(seed, images.length).map((i) => images[i]);
-  history.replaceState(null, '', `#${encode(seed, friend)}`);
+function start(s, friendScore, old = false) {
+  seed = s; friend = friendScore; legacy = old; round = 0; guesses = [];
+  order = game(seed, legacy, images, legacyIds).map((i) => images[i]);
+  history.replaceState(null, '', `#${encode(seed, friend, legacy)}`);
   $('friend-top').hidden = friend == null;
   if (friend != null) $('friend-top').textContent = `A friend scored ${friend} on these five. Your turn.`;
   $('end').hidden = true; $('wall').hidden = true; $('label').hidden = true; $('guess').hidden = false;
@@ -96,7 +96,7 @@ function finish() {
   const ol = $('recap'); ol.textContent = '';
   order.forEach((r, i) => {
     const li = document.createElement('li'), im = document.createElement('img');
-    im.src = `img/${r.id}.webp`; im.alt = ''; im.width = 60; im.height = Math.round(60 * r.h / r.w);
+    im.loading = 'lazy'; im.src = `img/${r.id}.webp`; im.alt = ''; im.width = 60; im.height = Math.round(60 * r.h / r.w);
     const tx = document.createElement('span');
     tx.innerHTML = `<b>${r.year}</b> You said ${guesses[i]}. ${points(guesses[i], r.year)} points.`;
     li.append(im, tx); ol.append(li);
@@ -104,17 +104,17 @@ function finish() {
   const wall = $('wall'); wall.textContent = '';
   order.forEach((r, i) => {
     const fig = document.createElement('figure'), fr = document.createElement('div'), im = document.createElement('img'), cap = document.createElement('figcaption');
-    fr.className = 'frame'; im.src = `img/${r.id}.webp`; im.alt = ''; im.width = r.w; im.height = r.h; fr.append(im);
+    fr.className = 'frame'; im.loading = 'lazy'; im.src = `img/${r.id}.webp`; im.alt = ''; im.width = r.w; im.height = r.h; fr.append(im);
     cap.innerHTML = `<b>${r.year}</b> you said ${guesses[i]}`; fig.append(fr, cap); wall.append(fig);
   });
   wall.hidden = false;
-  history.replaceState(null, '', `#${encode(seed, t)}`);
+  history.replaceState(null, '', `#${encode(seed, t, legacy)}`);
   $('msg').textContent = '';
   $('end').hidden = false; $('e-score').focus?.();
   $('room').scrollIntoView({ block: 'start' });
 }
 
-function link() { return `${location.origin}${location.pathname}#${encode(seed, total())}`; }
+function link() { return `${location.origin}${location.pathname}#${encode(seed, total(), legacy)}`; }
 
 $('copy').addEventListener('click', async () => {
   const url = link();
@@ -177,9 +177,9 @@ function fromHash() {
     return;
   }
   if (location.hash === '#about') { start(DEFAULT_SEED, null); history.replaceState(null, '', '#about'); return; }
-  start(h ? h.seed : DEFAULT_SEED, h ? h.score : null);
+  start(h ? h.seed : DEFAULT_SEED, h ? h.score : null, h ? h.legacy : false);
   if (!h) history.replaceState(null, '', location.pathname);
 }
-window.addEventListener('hashchange', () => { if (location.hash !== '#about' && location.hash !== `#${encode(seed, friend)}`) fromHash(); });
+window.addEventListener('hashchange', () => { if (location.hash !== '#about' && location.hash !== `#${encode(seed, friend, legacy)}`) fromHash(); });
 window.__card = card;
 fromHash();

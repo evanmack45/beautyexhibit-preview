@@ -5,17 +5,30 @@ const base = process.argv[2] || 'http://localhost:8945/';
 const origin = new URL(base).origin;
 const L = await import(new URL('../site-build/src/logic.js', import.meta.url));
 const images = JSON.parse(readFileSync(new URL('../site-build/data/images.json', import.meta.url)));
+const legacyIds = JSON.parse(readFileSync(new URL('../site-build/data/legacy-ids.json', import.meta.url)));
+const fixture = JSON.parse(readFileSync(new URL('./legacy-fixture.json', import.meta.url))).links;
+const house = () => L.game(20261125, false, images, legacyIds).map((i) => images[i]);
+const H = (20261125).toString(36);
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; console.log('ok  ', m); } else { fail++; console.log('FAIL', m); } };
 const b = await chromium.launch({ channel: 'chrome' });
 
 // Pure logic
-ok(new Set(L.pick(7, images.length)).size === 5, 'pick gives 5 distinct images');
-const seen = new Set(); for (let s = 1; s < 400; s++) L.pick(s, images.length).forEach((i) => seen.add(i));
-ok(seen.size === images.length, `all ${images.length} images reachable`);
+ok(images.length >= 120, `pool has ${images.length} images (120 or more)`);
+ok(new Set(L.game(7, false, images, legacyIds)).size === 5, 'a game gives 5 distinct images');
+{
+  const seen = new Set(); let spread = true, N = 4000;
+  for (let s = 1; s <= N; s++) { const g = L.game(s, false, images, legacyIds); g.forEach((i) => seen.add(i)); if (new Set(g.map((i) => L.eraOf(images[i].year))).size !== 5) spread = false; }
+  ok(spread, `every one of ${N} games has one image from each of the 5 eras`);
+  ok(seen.size === images.length, `all ${images.length} images reachable (${seen.size})`);
+  let share = 0; for (let s = 1; s <= N; s++) { const a = L.game(s, false, images, legacyIds), c = L.game(s + 7777777, false, images, legacyIds); if (a.some((i) => c.includes(i))) share++; }
+  ok(share / N < 0.2, `two random games share an image ${(100 * share / N).toFixed(1)}% of the time`);
+}
+for (const [h, ids] of Object.entries(fixture)) { const d = L.decode('#' + h); ok(d.legacy && L.game(d.seed, true, images, legacyIds).map((i) => images[i].id).join() === ids.join(), `logic: old link #${h} gives the same five as the old site`); }
+ok(L.decode('#g=abc.10')?.legacy === false && L.encode(5, 10) === 'g=5.10' && L.encode(5, 10, true) === 's=5.10', 'new links use #g=, old links keep #s=');
 ok(L.points(1900, 1900) === 100 && L.points(1890, 1900) === 70 && L.points(1700, 1900) === 0, 'points: exact 100, 10 off 70, floor 0');
 for (const [t, want] of [['', 'error'], ['abcd', 'error'], ['185', 'error'], ['1789', 'error'], ['1941', 'error'], ['2026', 'error'], ['19.5', 'error'], [' 1900 ', 'year'], ['1790', 'year'], ['1940', 'year']]) ok(want in L.readYear(t), `readYear(${JSON.stringify(t)}) gives ${want}`);
-for (const h of ['#s=', '#s=0', '#s=zzzzzzzz', '#s=abc.501', '#s=abc.-1', '#s=ABC', '#garbage', '#s=abc.12.3', '#s=1z141z4']) ok(L.decode(h) === null, `decode rejects ${h}`);
+for (const h of ['#s=', '#s=0', '#s=zzzzzzzz', '#s=abc.501', '#s=abc.-1', '#s=ABC', '#garbage', '#s=abc.12.3', '#s=1z141z4', '#g=', '#g=0', '#x=abc', '#g=abc.501']) ok(L.decode(h) === null, `decode rejects ${h}`);
 ok(L.decode('#s=abc.0')?.score === 0 && L.decode('#s=abc')?.score === null, 'decode accepts seed with and without score');
 ok(images.every((r) => /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/.test(r.source) && r.license && r.year >= 1790 && r.year <= 1940), 'every image has a Commons source, license and year');
 
@@ -36,7 +49,7 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${tag} no sideways scroll`);
   const lock = await p.locator('#lock').boundingBox();
   ok(lock && lock.y + lock.height <= h, `${tag} lock button in first screen (${Math.round(lock.y + lock.height)} of ${h})`);
-  const first = L.pick(20261125, images.length).map((i) => images[i]);
+  const first = house();
   ok((await p.getAttribute('#art', 'src')) === `img/${first[0].id}.webp`, `${tag} house set first image`);
   ok(await p.evaluate(() => document.getElementById('art').naturalWidth > 0), `${tag} image loaded`);
 
@@ -74,7 +87,7 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   const guesses = [1850, first[1].year, first[2].year + 1 <= 1940 ? first[2].year + 1 : first[2].year - 1, 1850, 1850];
   const want = guesses.reduce((s, g, i) => s + L.points(g, first[i].year), 0);
   ok((await p.textContent('#e-score')) === String(want), `${tag} final score ${want} matches the logic`);
-  ok(new URL(p.url()).hash === `#s=${(20261125).toString(36)}.${want}`, `${tag} link holds seed and score (${new URL(p.url()).hash})`);
+  ok(new URL(p.url()).hash === `#g=${H}.${want}`, `${tag} link holds seed and score (${new URL(p.url()).hash})`);
   ok(await p.locator('#recap li').count() === 5, `${tag} recap lists 5`);
   if (w >= 900) ok(await p.isVisible('#wall') && await p.locator('#wall figure').count() === 5, `${tag} wall of 5 framed images`);
   // save card
@@ -85,12 +98,12 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   await p.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
   await p.click('#copy'); await p.waitForTimeout(200);
   const clip = await p.evaluate(() => navigator.clipboard.readText().catch(() => ''));
-  ok(clip.endsWith(`#s=${(20261125).toString(36)}.${want}`) || /Copy this link/.test(await p.textContent('#msg')), `${tag} copy link gives the challenge link`);
+  ok(clip.endsWith(`#g=${H}.${want}`) || /Copy this link/.test(await p.textContent('#msg')), `${tag} copy link gives the challenge link`);
   // storage
   ok(await p.evaluate(() => localStorage.length === 0 && sessionStorage.length === 0 && document.cookie === ''), `${tag} no storage or cookies`);
   // new images
   await p.click('#again');
-  ok(await p.isVisible('#guess') && (await p.textContent('#count')) === 'Image 1 of 5' && /^#s=[0-9a-z]+$/.test(new URL(p.url()).hash) && new URL(p.url()).hash !== '#s=c29l1', `${tag} new images start a fresh seeded round`);
+  ok(await p.isVisible('#guess') && (await p.textContent('#count')) === 'Image 1 of 5' && /^#g=[0-9a-z]+$/.test(new URL(p.url()).hash) && new URL(p.url()).hash !== `#g=${H}`, `${tag} new images start a fresh seeded round`);
   ok(p.foreign.length === 0, `${tag} no third-party requests ${p.foreign.join(' ')}`);
   ok(p.errs.length === 0, `${tag} no console errors ${p.errs.join(' ')}`);
   await p.context().close();
@@ -99,8 +112,8 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
 // challenge link
 {
   const p = await page(390, 844), seed = 987654;
-  await p.goto(`${base}#s=${seed.toString(36)}.250`); await p.waitForTimeout(300);
-  const set = L.pick(seed, images.length).map((i) => images[i]);
+  await p.goto(`${base}#g=${seed.toString(36)}.250`); await p.waitForTimeout(300);
+  const set = L.game(seed, false, images, legacyIds).map((i) => images[i]);
   ok(/A friend scored 250/.test(await p.textContent('#friend-top')) && (await p.getAttribute('#art', 'src')) === `img/${set[0].id}.webp`, 'challenge link loads the same five and the friend score');
   await play(p, set.map((r) => r.year));
   ok((await p.textContent('#e-score')) === '500' && /You beat your friend's 250/.test(await p.textContent('#friend')), 'perfect run beats the friend');
@@ -108,8 +121,27 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   ok(p.errs.length === 0, 'challenge: no console errors');
   await p.context().close();
 }
+// old #s= links made before the pool grew replay the same five, in the browser
+for (const [h, ids] of Object.entries(fixture)) {
+  const p = await page(390, 844);
+  await p.goto(`${base}#${h}`); await p.waitForTimeout(300);
+  const got = [];
+  for (let i = 0; i < 5; i++) { got.push((await p.getAttribute('#art', 'src')).replace(/^img\/|\.webp$/g, '')); await p.fill('#year-in', '1850'); await p.click('#lock'); await p.click('#next'); }
+  ok(got.join() === ids.join() && /friend's 250/.test(await p.textContent('#friend')) && /^#s=/.test(new URL(p.url()).hash), `old link #${h} replays ${got.join(',')} and keeps #s=`);
+  ok(p.errs.length === 0, `old link #${h}: no console errors`);
+  await p.context().close();
+}
+// lazy loading: recap and wall images are lazy, only the first image is preloaded
+{
+  const p = await page(1280, 800);
+  await p.goto(base); await p.waitForTimeout(300);
+  ok(await p.locator('link[rel=preload][as=image]').count() === 1 && (await p.getAttribute('link[rel=preload][as=image]', 'href')) === `img/${house()[0].id}.webp`, 'only the first image is preloaded');
+  await play(p, [1850, 1850, 1850, 1850, 1850]);
+  ok(await p.evaluate(() => [...document.querySelectorAll('#recap img, #wall img')].every((i) => i.loading === 'lazy')), 'recap and wall images are lazy');
+  await p.context().close();
+}
 // bad links
-for (const h of ['#s=', '#s=zzzzzzzz', '#s=abc.999', '#s=0', '#garbage', '#s=abc.-1', '#%3Cscript%3E']) {
+for (const h of ['#s=', '#s=zzzzzzzz', '#s=abc.999', '#s=0', '#garbage', '#s=abc.-1', '#%3Cscript%3E', '#g=', '#g=abc.999', '#v=abc']) {
   const p = await page(390, 844);
   await p.goto(base + h); await p.waitForTimeout(250);
   ok(/did not work/.test(await p.textContent('#friend-top')) && await p.isVisible('#guess') && p.errs.length === 0, `bad link ${h} falls back to the house set`);

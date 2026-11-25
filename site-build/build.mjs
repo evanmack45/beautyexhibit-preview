@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { pick, ROUNDS, MIN_YEAR, MAX_YEAR, MAX_POINTS } from './src/logic.js';
+import { game, ERAS, eraOf, ROUNDS, MIN_YEAR, MAX_YEAR, MAX_POINTS } from './src/logic.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(here, '..', 'docs');
@@ -10,10 +10,12 @@ const SITE = 'https://evanmack45.github.io/beautyexhibit-preview/';
 const AFTERNIC = 'https://www.afternic.com/domain/beautyexhibit.com';
 const DEFAULT_SEED = 20261125;
 const raw = JSON.parse(readFileSync(join(here, 'data/images.json'), 'utf8'));
+// The first 42 ids, frozen so #s= links made before the pool grew replay the same five.
+const legacyIds = JSON.parse(readFileSync(join(here, 'data/legacy-ids.json'), 'utf8'));
 
 // Boundary checks: fail the build on bad data.
 const fail = (m) => { throw new Error(`images.json: ${m}`); };
-if (raw.length < 15) fail('fewer than 15 verified images');
+if (raw.length < 120) fail('fewer than 120 verified images');
 const ids = new Set();
 for (const r of raw) {
   if (ids.has(r.id)) fail(`duplicate id ${r.id}`); ids.add(r.id);
@@ -24,10 +26,13 @@ for (const r of raw) {
   if (!r.title || !r.look || /[—<>]/.test(r.title + r.look)) fail(`bad copy on ${r.id}`);
   if (!existsSync(join(here, 'src/img', `${r.id}.webp`))) fail(`missing image ${r.id}`);
 }
+if (legacyIds.length !== 42 || legacyIds.some((id, i) => raw[i]?.id !== id)) fail('legacy ids must stay the first 42 records, in order');
+const perEra = ERAS.map((_, e) => raw.filter((r) => eraOf(r.year) === e).length);
+if (perEra.some((n) => n < 20)) fail(`an era has fewer than 20 images: ${perEra}`);
 const images = raw.map(({ id, year, title, artist, look, license, licenseTags, source, holder, w, h }) => ({ id, year, title, artist, look, license, licenseTags, source, holder, w, h }));
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const first = images[pick(DEFAULT_SEED, images.length)[0]];
+const first = images[game(DEFAULT_SEED, false, images, legacyIds)[0]];
 const byLicense = images.reduce((a, r) => ({ ...a, [r.license]: (a[r.license] || 0) + 1 }), {});
 const credit = (r) => `${esc(r.title)}${r.artist && r.artist !== r.holder ? `, ${esc(r.artist)}` : ''}${r.holder ? `, ${esc(r.holder)}` : ''}`;
 
@@ -103,6 +108,7 @@ const html = `<!doctype html>
 <section class="about" id="about" aria-labelledby="about-h">
   <h2 id="about-h">About the images</h2>
   <p>Every image here is out of copyright. ${byLicense['CC0 1.0']} are released as CC0 by the Rijksmuseum, and ${byLicense['Public domain']} are public domain because of their age. Each one has a single printed or catalogued year on its Wikimedia Commons page, and that year is the answer. We cropped out printed dates so the picture does not give it away.</p>
+  <p>Each game takes one image from each of five eras, so every set runs from the 1790s to the 1930s in a mixed order.</p>
   <p>A score is 100 for the exact year, minus 3 for every year you are off. Your guesses stay in this page. There are no accounts, cookies or trackers. The challenge link holds the round number and your score, nothing else.</p>
   <details class="all">
     <summary>All ${images.length} images and their credits</summary>
@@ -113,6 +119,7 @@ const html = `<!doctype html>
   <p>Images from Wikimedia Commons, credited on each answer. Beauty Exhibit is a small game, not linked to any brand shown.</p>
   <p><a href="${AFTERNIC}">This domain is for sale.</a></p>
 </footer>
+<script type="application/json" id="legacy">${JSON.stringify(legacyIds)}</script>
 <script type="application/json" id="images">${JSON.stringify(images).replace(/</g, '\\u003c')}</script>
 <script type="module" src="app.js"></script>
 </body>
@@ -127,4 +134,4 @@ for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 's
 for (const r of images) copyFileSync(join(here, 'src/img', `${r.id}.webp`), join(out, 'img', `${r.id}.webp`));
 writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 writeFileSync(join(out, '.nojekyll'), '');
-console.log(`built ${out}: ${images.length} images (${JSON.stringify(byLicense)}), default seed ${DEFAULT_SEED}`);
+console.log(`built ${out}: ${images.length} images (${JSON.stringify(byLicense)}), per era ${perEra}, default seed ${DEFAULT_SEED}`);
