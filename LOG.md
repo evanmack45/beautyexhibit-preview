@@ -1,3 +1,7 @@
+# DONE 2026-11-25 7:25 AM CT (Gizmo): Dash art wired — accessories-a masthead, frieze divider, about still life, og.jpg on the share card.
+
+Hero uses accessories-a (clean paper; B had sheet edges and was skipped). Generated art is frame/chrome only; CC0 plates were not overwritten. Gate (390+1280) PASS, no P0/P1; Lighthouse mobile performance 95 / accessibility 100 / best-practices 100, CLS 0, SEO 66 (intended noindex). Impeccable 0 findings at 390 and 1280.
+
 # DONE 2026-11-25 2:53 AM CT (Gizmo): B1 small refresh live (commit 0274946)
 
 - Intro line, meta description and og:description now say fashion plates, one from each era between the 1790s and the 1930s.

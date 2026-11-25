@@ -46,8 +46,12 @@ const html = `<!doctype html>
 <meta name="description" content="Five old fashion plates from the 1790s to the 1930s. Guess the year of each one, then see the real date and the credit.">
 <meta property="og:title" content="Beauty Year">
 <meta property="og:description" content="Guess the year of five old fashion plates. How close can you get?">
-<meta property="og:image" content="${SITE}og.png">
+<meta property="og:image" content="${SITE}og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A Regency bonnet, a plumed lace hat and a 1920s cloche in a triangle above a lace fan and glove, hand-coloured on aged paper.">
 <meta property="og:type" content="website">
+<link rel="preload" as="image" href="img/hero.webp" imagesrcset="img/hero-800.webp 800w, img/hero.webp 1280w, img/hero-1920.webp 1920w" imagesizes="100vw">
 <meta name="theme-color" content="#1a1411">
 <link rel="preload" href="fonts/bodoni.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
@@ -60,12 +64,15 @@ const html = `<!doctype html>
   <a class="brand" href="./">Beauty <i>Exhibit</i></a>
   <a class="toplink" href="#about">About the images</a>
 </header>
-<main class="room" id="room" data-seed="${DEFAULT_SEED}">
-  <div class="intro">
+<div class="mast">
+  <img class="mast-art" src="img/hero.webp" srcset="img/hero-800.webp 800w, img/hero.webp 1280w, img/hero-1920.webp 1920w" sizes="100vw" width="1280" height="714" alt="A hand-coloured procession of period accessories: turban, bonnet, gloves, fan, parasol, feathered hats, cloche and beret on aged paper." fetchpriority="high" decoding="async">
+  <div class="mast-copy">
     <h1>Beauty <i>Year</i></h1>
     <p class="lede">Five old fashion plates, one from each era between the 1790s and the 1930s. Guess the year each one came out.</p>
     <p class="friend" id="friend-top" hidden></p>
   </div>
+</div>
+<main class="room" id="room" data-seed="${DEFAULT_SEED}">
   <figure class="piece" id="piece">
     <div class="frame"><img id="art" src="img/${first.id}.webp" width="${first.w}" height="${first.h}" style="--ar:${(first.w / first.h).toFixed(4)}" alt="Image 1 of ${ROUNDS}. ${esc(first.look)}" decoding="async"></div>
     <figcaption class="count" id="count">Image 1 of ${ROUNDS}</figcaption>
@@ -105,7 +112,9 @@ const html = `<!doctype html>
     <noscript><p class="msg">Guessing needs JavaScript. Here is the first image to look at. It is from ${first.year}.</p></noscript>
   </section>
 </main>
+<img class="frieze" src="img/frieze.webp" srcset="img/frieze-800.webp 800w, img/frieze.webp 1280w" sizes="100vw" width="1280" height="182" alt="A repeating band of small period hats, bonnets, fans and gloves in watercolour on aged paper." loading="lazy" decoding="async">
 <section class="about" id="about" aria-labelledby="about-h">
+  <img class="still" src="img/still.webp" srcset="img/still-480.webp 480w, img/still.webp 720w" sizes="(min-width: 700px) 280px, 60vw" width="720" height="894" alt="An open lace fan, long gloves, a pearl necklace and an embroidered pouch on a tasselled velvet cushion inside a thin gold plate border." loading="lazy" decoding="async">
   <h2 id="about-h">About the images</h2>
   <p>Every image here is out of copyright. ${byLicense['CC0 1.0']} are released as CC0 by the Rijksmuseum, and ${byLicense['Public domain']} are public domain because of their age. Each one has a single printed or catalogued year on its Wikimedia Commons page, and that year is the answer. We cropped out printed dates so the picture does not give it away.</p>
   <p>Each game takes one image from each of five eras, so every set runs from the 1790s to the 1930s in a mixed order.</p>
@@ -129,9 +138,10 @@ const html = `<!doctype html>
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'fonts'), { recursive: true }); mkdirSync(join(out, 'img'), { recursive: true });
 writeFileSync(join(out, 'index.html'), html);
-for (const f of ['style.css', 'app.js', 'logic.js', 'og.png']) { try { copyFileSync(join(here, 'src', f), join(out, f)); } catch (e) { if (f !== 'og.png') throw e; } }
+for (const f of ['style.css', 'app.js', 'logic.js']) copyFileSync(join(here, 'src', f), join(out, f));
 for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 'src/fonts', f), join(out, 'fonts', f));
-for (const r of images) copyFileSync(join(here, 'src/img', `${r.id}.webp`), join(out, 'img', `${r.id}.webp`));
+for (const f of readdirSync(join(here, 'src/img'))) copyFileSync(join(here, 'src/img', f), join(out, 'img', f));
+copyFileSync(join(here, 'src/img/og.jpg'), join(out, 'og.jpg'));
 writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: ${images.length} images (${JSON.stringify(byLicense)}), per era ${perEra}, default seed ${DEFAULT_SEED}`);

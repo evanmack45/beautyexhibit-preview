@@ -136,14 +136,22 @@ async function card() {
   const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const x = cv.getContext('2d'), t = total();
   x.fillStyle = '#1a1411'; x.fillRect(0, 0, W, H);
-  const g = x.createRadialGradient(W / 2, 120, 40, W / 2, 300, 900); g.addColorStop(0, 'rgba(255,214,170,0.16)'); g.addColorStop(1, 'rgba(255,214,170,0)');
+  const g = x.createRadialGradient(W / 2, 420, 40, W / 2, 620, 900); g.addColorStop(0, 'rgba(255,214,170,0.16)'); g.addColorStop(1, 'rgba(255,214,170,0)');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
+  let plateTop = 0;
+  try {
+    const plate = await loadImg('img/og.jpg');
+    const ph = 300;
+    const sy = 0, sh = plate.height * 0.58;
+    x.drawImage(plate, 0, sy, plate.width, sh, 0, 0, W, ph);
+    plateTop = ph;
+  } catch { /* keep the dark card if the plate is missing */ }
   x.textAlign = 'center'; x.fillStyle = '#f3e7d6';
-  x.font = 'italic 600 84px "Bodoni Moda"'; x.fillText('Beauty Year', W / 2, 150);
-  x.fillStyle = '#c9a46a'; x.font = '600 220px "Bodoni Moda"'; x.fillText(String(t), W / 2, 400);
-  x.fillStyle = '#f3e7d6'; x.font = '500 38px "Jost"'; x.fillText(`out of ${ROUNDS * MAX_POINTS}. ${verdict(t)}.`, W / 2, 470);
+  x.font = 'italic 600 84px "Bodoni Moda"'; x.fillText('Beauty Year', W / 2, plateTop + 110);
+  x.fillStyle = '#c9a46a'; x.font = '600 200px "Bodoni Moda"'; x.fillText(String(t), W / 2, plateTop + 320);
+  x.fillStyle = '#f3e7d6'; x.font = '500 38px "Jost"'; x.fillText(`out of ${ROUNDS * MAX_POINTS}. ${verdict(t)}.`, W / 2, plateTop + 390);
   const imgs = await Promise.all(order.map((r) => loadImg(`img/${r.id}.webp`)));
-  const cw = 176, gap = 18, x0 = (W - (cw * ROUNDS + gap * (ROUNDS - 1))) / 2, top = 560, ch = 250;
+  const cw = 176, gap = 18, x0 = (W - (cw * ROUNDS + gap * (ROUNDS - 1))) / 2, top = plateTop + 460, ch = 230;
   imgs.forEach((im, i) => {
     const cx = x0 + i * (cw + gap), s = Math.max(cw / im.width, ch / im.height), sw = cw / s, sh = ch / s;
     x.fillStyle = '#c9a46a'; x.fillRect(cx - 4, top - 4, cw + 8, ch + 8);
