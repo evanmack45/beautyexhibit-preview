@@ -1,8 +1,9 @@
 ok   pool has 168 images (120 or more)
 ok   a game gives 5 distinct images
 ok   every one of 4000 games has one image from each of the 5 eras
-ok   all 168 images reachable (168)
-ok   two random games share an image 14.4% of the time
+ok   all 164 images in new games reachable (164)
+ok   legacy-only images never appear in new games
+ok   two random games share an image 14.8% of the time
 ok   logic: old link #s=l62u.250 gives the same five as the old site
 ok   logic: old link #s=c29l1.250 gives the same five as the old site
 ok   logic: old link #s=1.250 gives the same five as the old site
@@ -38,7 +39,7 @@ ok   every image has a Commons source, license and year
 ok   @390 noindex meta
 ok   @390 for-sale footer link
 ok   @390 no sideways scroll
-ok   @390 lock button in first screen (778 of 844)
+ok   @390 lock button in first screen (783 of 844)
 ok   @390 house set first image
 ok   @390 image loaded
 ok   @390 slider arrows update the year box
@@ -58,10 +59,10 @@ ok   @390 reveal compares to today
 ok   @390 Enter on Next goes to image 2
 ok   @390 exact year gets 100
 ok   @390 off by 1 says "1 year"
-ok   @390 final score 267 matches the logic
-ok   @390 link holds seed and score (#g=c29l1.267)
+ok   @390 final score 252 matches the logic
+ok   @390 link holds seed and score (#g=c29l1.252)
 ok   @390 recap lists 5
-ok   @390 score card PNG 1080x1350 (beauty-year-267.png)
+ok   @390 score card PNG 1080x1350 (beauty-year-252.png)
 ok   @390 copy link gives the challenge link
 ok   @390 no storage or cookies
 ok   @390 new images start a fresh seeded round
@@ -70,7 +71,7 @@ ok   @390 no console errors
 ok   @1280 noindex meta
 ok   @1280 for-sale footer link
 ok   @1280 no sideways scroll
-ok   @1280 lock button in first screen (481 of 800)
+ok   @1280 lock button in first screen (486 of 800)
 ok   @1280 house set first image
 ok   @1280 image loaded
 ok   @1280 slider arrows update the year box
@@ -90,11 +91,11 @@ ok   @1280 reveal compares to today
 ok   @1280 Enter on Next goes to image 2
 ok   @1280 exact year gets 100
 ok   @1280 off by 1 says "1 year"
-ok   @1280 final score 267 matches the logic
-ok   @1280 link holds seed and score (#g=c29l1.267)
+ok   @1280 final score 252 matches the logic
+ok   @1280 link holds seed and score (#g=c29l1.252)
 ok   @1280 recap lists 5
 ok   @1280 wall of 5 framed images
-ok   @1280 score card PNG 1080x1350 (beauty-year-267.png)
+ok   @1280 score card PNG 1080x1350 (beauty-year-252.png)
 ok   @1280 copy link gives the challenge link
 ok   @1280 no storage or cookies
 ok   @1280 new images start a fresh seeded round
@@ -130,6 +131,8 @@ ok   #about keeps the game and the anchor
 ok   credits list has every image with a source link
 ok   no JS: first image shows
 ok   no JS: says guessing needs JavaScript
+ok   @390 panel stays put while the image loads (525 then 525)
+ok   @1280 panel stays put while the image loads (213 then 213)
 ok   robots.txt disallows all
 
-133 passed, 0 failed
+136 passed, 0 failed

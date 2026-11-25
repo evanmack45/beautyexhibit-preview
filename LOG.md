@@ -1,4 +1,96 @@
-# DONE 2026-11-25 1:55 AM CT (Gizmo): B1 Beauty Year live at https://evanmack45.github.io/beautyexhibit-preview/
+# DONE 2026-11-25 2:46 AM CT (Gizmo): Beauty Year pool grown from 42 to 168 verified PD/CC0 images, live
+
+Live at https://evanmack45.github.io/beautyexhibit-preview/ (commits c0883e7 and 32d9886 on master). Live files match the local build by md5 (index.html, app.js, logic.js, style.css, robots.txt, sample images). Pages cname is null. No DNS, Afternic or registrar changes. Nothing posted, nobody messaged.
+
+## JOB 0, T1 price re-check
+58 OK, 0 CHANGED, 0 UNREADABLE. Nothing to eye-check.
+
+## Count
+- 168 images in images.json. 164 are used in new games.
+- 4 older images with drawn period children (ids 36, 37, 133, 280) are marked legacyOnly. They stay only so old challenge links still replay, and new games never show them.
+- 126 new images were added. Every one was checked by eye on contact sheets, before and after cropping.
+
+## Era histogram (all 168)
+| Decade | Images |
+|---|---|
+| 1790s | 10 |
+| 1800s | 13 |
+| 1810s | 12 |
+| 1820s | 12 |
+| 1830s | 10 |
+| 1840s | 9 |
+| 1850s | 14 |
+| 1860s | 7 |
+| 1870s | 6 |
+| 1880s | 10 |
+| 1890s | 10 |
+| 1900s | 10 |
+| 1910s | 11 |
+| 1920s | 24 |
+| 1930s | 10 |
+
+- Pre-1850 is 66 (target 15+). 1920s and 1930s together are 34 (target 20+).
+- The 1910s are now 11 of 168, down from 11 of 42.
+- New-game eras (one image is drawn from each): 1790 to 1819 has 35, 1820 to 1849 has 31, 1850 to 1879 has 24, 1880 to 1909 has 29, 1910 to 1940 has 45.
+
+## License and source breakdown
+- CC0 1.0: 119. All are Rijksmuseum files on Wikimedia Commons, with CC-zero templates.
+- Public domain: 49. These are Commons files with PD templates (PD-old family, PD-US, PD-US-expired and similar).
+- Every image passed the same four checks:
+  1. Commons API extmetadata License is pd or cc0.
+  2. A PD or CC-zero template is present.
+  3. The date is a single exact year, with no circa, question mark or range.
+  4. The file is jpeg, png or tiff.
+- For 1925 and later, only CC0 or US PD templates count. All new 1925+ images are Rijksmuseum CC0.
+- The Met, Smithsonian, AIC, NYPL and LoC were allowed but not needed. Earlier the AIC API was behind a Cloudflare challenge and the Met API returned 403, and I did not work around either.
+- Data:
+  - site-build/data/images.json records id, year, title, artist, look, license, licenseTags, source, file, holder, commonsDate, crop and size.
+  - Crops are in data/raw/crops2.json.
+  - Harvest scripts are data/raw/commons2.py (categories) and data/raw/commons-search.py (search, for the thin 1840s, 1860s and 1890s).
+
+## Exclusions (new candidates, 181 shortlisted from 1,092 harvested)
+- Children in the picture, 20: n43, n57, n78, n82, n88, n93, n135, m4, m7, m12, m13, m14, m16, m17, m18, m19, m20, m21, m25, m27, m30, n81. A keyword filter also dropped more candidates before the shortlist.
+- Text-heavy ads, covers or mastheads where the date or most of the image is print, 14: n76, n77, n80, n84 (a year printed under every figure), n90, n97, n99, n101, n112, n113, n114, n115, n116, n117, n136.
+- Period costume or carnival dress, not a fashion of its year: n60, n61, n107, n109. Satire: n32 (crowd caricature).
+- Duplicates or near duplicates: n8 (same plate as n2), n108 (same sheet as n104).
+- The commons date does not match the year in the file name: n49 (1832 vs 1834), n51 (1835 vs 1834), n103 (1902 vs Jan 1903).
+- Product photos, not looks: n137, n139. Faint or poor scans: m1, n130.
+- Four-digit model numbers that read like years: n144, n146. A printed date I could not crop cleanly: n0.
+- n53 is titled young lady's dress and may show a girl.
+- Earlier rule kept: no racist or body-shaming copy. None of the new images carry ad copy.
+
+## Picker and links
+- New games take one seeded image from each of five eras, then shuffle their order. Every game spans the 1790s to the 1930s (5 distinct decades in 20,000 simulated games).
+- New links use #g=seed.score.
+- Old #s= links replay over the frozen first 42 ids (site-build/data/legacy-ids.json), so they show the same five images as before.
+  - Proven against the old live site: qa/legacy-capture.mjs recorded five old links before the deploy (qa/legacy-fixture.json), and e2e replays them on the new site.
+  - The build fails if those 42 records move.
+- Repeat estimate:
+  - Two random games share at least one image about 14% of the time (14.8% in e2e simulation). The expected overlap is 0.15 images.
+  - Identical five: about 1 in 37 million.
+  - Distinct sets: about 37 million.
+- Page weight: only the first image is preloaded, and only the next image is fetched during a game. Recap and wall images use loading=lazy, and the credits list has no images. Lighthouse total is 345 KiB.
+
+## Fixes found by QA
+- CLS 0.292 on Lighthouse mobile (1280 gate). Cause: the round image had no size until its file arrived, so the panel jumped 300px.
+  - Fix: #art gets a definite width from its aspect ratio (--ar). CLS is now 0.
+  - e2e checks this by delaying images and confirming the panel stays put.
+- 83 tap targets under 24px. These were inline credit links counted inside the closed details. Fix: 3px block padding on inline links and line-height 1.2 on the brand. Now 0.
+
+## QA (live)
+- e2e: 136 passed, 0 failed. Log at qa/e2e-live.log; local run at qa/e2e-local.log.
+- Gate 390 + 1440: PASS, no P0 and no P1. Lighthouse 100/100/100, CLS 0, LCP 1.5 s. Results in qa/live-v3/.
+- Gate 1280: PASS, no P0 and no P1. Lighthouse 100/100/100, CLS 0, LCP 1.6 s. Results in qa/live-v3-1280/.
+- impeccable: 0 findings on home, reveal and end, at 390x844 and 1280x800. Files are qa/impeccable-v3-*.json.
+- Fold screenshots were checked by eye at 390 and 1280.
+
+## What still breaks or is open
+- New #g= links depend on the pool. Adding or removing images later changes which five a #g= link shows. Old #s= links are frozen and safe.
+- The 1860s (7) and 1870s (6) are the thinnest decades. The 1850 to 1879 era band still has 24 images in new games.
+- Lede still says ads and covers. The pool is now mostly fashion plates, with a few ads and covers from the original set.
+- Old GIFs and og.png show the earlier build and were not regenerated.
+
+## Earlier: DONE 2026-11-25 1:55 AM CT (Gizmo): B1 Beauty Year live at https://evanmack45.github.io/beautyexhibit-preview/
 
 Noindex GitHub Pages preview on the default github.io address. There is no custom domain or CNAME (Pages API returns cname null). No DNS, Afternic or registrar changes. Nothing was posted and nobody was messaged.
 
