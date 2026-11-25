@@ -1,3 +1,14 @@
+# DONE 2026-11-25 5:21 PM CT (Gizmo): hero subtitle readable over the hat/fan art.
+
+The lede ("Five old fashion plates...") sat on the accessories at 390 and 1280. Fix (933a9ed): a CSS-mask quiet zone on `.mast-art` (same idea as ATL) so the art fades into the cream paper under the type; the lede stays in the title column on desktop (no 11.5rem indent onto the mid-row hats); a short cream cap plus a soft cream text halo. The frieze stays visible below and to the right. The lock button is still in the first screen (838 of 844 at 390; 749 of 800 at 1280).
+
+Contrast of the lede (`#5c4a3a`) against the art under the letters (hide the text, sample ink pixels at dpr 2):
+- 390: median 6.96:1, 5th percentile 5.64:1 (99.3% of ink pixels at 4.5:1 or better; a handful of antialiased edge pixels on a leftover hat line, worst 3.65:1)
+- 1280×800: median 6.89:1, 5th percentile 6.01:1
+- 1280×900: median 6.95:1, 5th percentile 6.19:1
+
+Local e2e 142/0 (robots/noindex asserts updated for the live indexable site). golive-verify --gate PASS: live e2e 142/0, Lighthouse 100/100/100/100, CLS 0, LCP 1.4 s, impeccable 0/0 at 390/1280 (static 1 is the pre-existing large-text 4.1:1 gold "Year"; AA large is 3:1). Viewed live folds: qa/art-folds/hero-fix/fold-390.png and fold-1280.png. No DNS changes, nobody messaged.
+
 # DONE 2026-11-25 10:45 AM CT (Gizmo): r4 verdict objects wired beside the score (curator loupe, sharp-eye pince-nez, getting-warmer fan, time-traveler unmarked compass). Share canvas draws the matching object. Local e2e 140/0, local gate 95 / CLS 0 / impeccable 0 at 390 and 1280.
 
 The r3 accessories mast had pushed the lock button below the fold at 390 and 1280×800 (e2e last passed that check at 2:42 AM, before the mast was wired). Modest compaction: phone mast min-height 230 and a slightly shorter plate; short desktops (max-height 860px) use a 400px mast so the lock sits in the first screen (838 of 844 at 390; 749 of 800 at 1280). Taller desktops keep the 560px mast. Copy unchanged. Static impeccable still flags the pre-existing 4.1:1 gold-on-cream "Year" (`#8a6a2c` on `#f3e7d6`). Live on 7ddb6b0: e2e 140/0, gate 100 / CLS 0 / impeccable 0 at 390 and 1280 (static still flags the pre-existing 4.1:1 gold-on-cream "Year"), LCP 1.5 s. Live home, curator end-screen and share-curator.png in qa/art-folds/r4/. noindex kept; no DNS or go-live. Local gate: qa/local-r4/.
