@@ -1,0 +1,8 @@
+node_modules
+qa/node_modules
+site-build/node_modules
+data/raw/big/
+data/raw/thumbs/
+data/raw/crop/
+data/raw/*.jpg
+qa/shots/
