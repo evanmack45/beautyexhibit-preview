@@ -1,3 +1,5 @@
+# DONE 2026-11-25 8:29 AM CT (Gizmo): B1 copied links (and the share-card host line) use a canonical preview URL on localhost (https://evanmack45.github.io/beautyexhibit-preview/; switch to https://beautyexhibit.com/ at go-live).
+
 # DONE 2026-11-25 7:25 AM CT (Gizmo): Dash art wired — accessories-a masthead, frieze divider, about still life, og.jpg on the share card.
 
 Hero uses accessories-a (clean paper; B had sheet edges and was skipped). Generated art is frame/chrome only; CC0 plates were not overwritten. Gate (390+1280) PASS, no P0/P1; Lighthouse mobile performance 95 / accessibility 100 / best-practices 100, CLS 0, SEO 66 (intended noindex). Impeccable 0 findings at 390 and 1280.

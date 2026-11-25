@@ -114,7 +114,13 @@ function finish() {
   $('room').scrollIntoView({ block: 'start' });
 }
 
-function link() { return `${location.origin}${location.pathname}#${encode(seed, total(), legacy)}`; }
+// Switch to https://beautyexhibit.com/ at go-live.
+const CANONICAL = 'https://evanmack45.github.io/beautyexhibit-preview/';
+const isLocalPage = () => location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const publicPage = () => (isLocalPage() ? CANONICAL : `${location.origin}${location.pathname}`).replace(/index\.html$/, '').replace(/\/?$/, '/');
+const publicLink = (hash) => `${publicPage()}${hash.startsWith('#') ? hash : '#' + hash}`;
+const publicFooter = (hash) => publicLink(hash).replace(/^https?:\/\//, '');
+function link() { return publicLink(`#${encode(seed, total(), legacy)}`); }
 
 $('copy').addEventListener('click', async () => {
   const url = link();
@@ -162,7 +168,7 @@ async function card() {
   });
   x.fillStyle = '#f3e7d6'; x.font = '500 34px "Jost"';
   x.fillText('Can you beat it? Play Beauty Year at', W / 2, 1110);
-  x.fillStyle = '#c9a46a'; x.font = '500 30px "Jost"'; x.fillText('evanmack45.github.io/beautyexhibit-preview', W / 2, 1160);
+  x.fillStyle = '#c9a46a'; x.font = '500 30px "Jost"'; x.fillText(publicFooter('').replace(/#$/, '').replace(/\/$/, ''), W / 2, 1160);
   x.fillStyle = '#9c8b7a'; x.font = '500 24px "Jost"'; x.fillText('Images public domain or CC0, via Wikimedia Commons', W / 2, 1270);
   return cv;
 }
