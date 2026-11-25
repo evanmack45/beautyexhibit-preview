@@ -89,7 +89,16 @@ const total = () => guesses.reduce((s, g, i) => s + points(g, order[i].year), 0)
 function finish() {
   const t = total();
   $('piece').hidden = true; $('friend-top').hidden = true;
-  $('e-score').textContent = t; $('e-verdict').textContent = verdict(t);
+  const v = verdict(t);
+  $('e-score').textContent = t; $('e-verdict').textContent = v;
+  const file = { 'Curator level': 'verdict-curator', 'Sharp eye': 'verdict-sharp-eye', 'Getting warmer': 'verdict-getting-warmer', 'Time traveler, lost': 'verdict-time-traveler' }[v];
+  const alt = { 'Curator level': 'A gloved hand holding a magnifying glass.', 'Sharp eye': 'A pair of pince-nez on a ribbon.', 'Getting warmer': 'A folded lace fan.', 'Time traveler, lost': 'An unmarked compass and a pearl.' }[v];
+  const obj = $('e-object');
+  obj.src = `img/${file}-400.webp`;
+  obj.srcset = `img/${file}-400.webp 400w, img/${file}-1024.webp 1024w`;
+  obj.sizes = '112px';
+  obj.alt = alt;
+  obj.hidden = false;
   const f = $('friend');
   f.hidden = friend == null;
   if (friend != null) f.textContent = t > friend ? `You beat your friend's ${friend}.` : t === friend ? `A tie with your friend's ${friend}.` : `Your friend's ${friend} still stands.`;
@@ -156,6 +165,17 @@ async function card() {
   x.font = 'italic 600 84px "Bodoni Moda"'; x.fillText('Beauty Year', W / 2, plateTop + 110);
   x.fillStyle = '#c9a46a'; x.font = '600 200px "Bodoni Moda"'; x.fillText(String(t), W / 2, plateTop + 320);
   x.fillStyle = '#f3e7d6'; x.font = '500 38px "Jost"'; x.fillText(`out of ${ROUNDS * MAX_POINTS}. ${verdict(t)}.`, W / 2, plateTop + 390);
+  try {
+    const vfile = { 'Curator level': 'verdict-curator', 'Sharp eye': 'verdict-sharp-eye', 'Getting warmer': 'verdict-getting-warmer', 'Time traveler, lost': 'verdict-time-traveler' }[verdict(t)];
+    const obj = await loadImg(`img/${vfile}-1024.webp`);
+    x.textAlign = 'center';
+    const scoreW = (() => { x.font = '600 200px "Bodoni Moda"'; return x.measureText(String(t)).width; })();
+    const room = W - 50 - (W / 2 + scoreW / 2 + 16);
+    const ow = Math.max(130, Math.min(220, room > 80 ? room : 160));
+    const ox = room > 80 ? W / 2 + scoreW / 2 + 16 : W - 50 - ow;
+    const oy = plateTop + 140;
+    x.drawImage(obj, ox, oy, ow, ow);
+  } catch { /* keep the card if the object is missing */ }
   const imgs = await Promise.all(order.map((r) => loadImg(`img/${r.id}.webp`)));
   const cw = 176, gap = 18, x0 = (W - (cw * ROUNDS + gap * (ROUNDS - 1))) / 2, top = plateTop + 460, ch = 230;
   imgs.forEach((im, i) => {

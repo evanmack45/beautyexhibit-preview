@@ -1,0 +1,97 @@
+[
+  {
+    "url": "http://127.0.0.1:8948/",
+    "viewport": "phone",
+    "issues": [],
+    "shots": [
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__fold.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__scroll025.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__scroll050.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__scroll075.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__scroll100.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__full.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__phone__reduced-motion.png"
+    ],
+    "loadMs": 689,
+    "framePacing": {
+      "frames": 250,
+      "p50": 16.699999999999818,
+      "p95": 16.700000000000728,
+      "over50ms": 0
+    },
+    "dom": {
+      "overflowX": 0,
+      "wide": [],
+      "tinyText": 0,
+      "imgsNoAlt": 0,
+      "brokenImgs": 0,
+      "smallTapTargets": 0,
+      "h1": 1,
+      "ogImage": true,
+      "canvases": 0,
+      "fonts": [
+        "\"Bodoni Moda\"",
+        "Jost"
+      ],
+      "title": "Beauty Year: guess when it was the look"
+    },
+    "axe": [],
+    "consoleErrors": [],
+    "badRequests": []
+  },
+  {
+    "url": "http://127.0.0.1:8948/",
+    "viewport": "desktop",
+    "issues": [],
+    "shots": [
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__fold.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__scroll025.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__scroll050.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__scroll075.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__scroll100.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__full.png",
+      "/workspace/sites/beautyexhibit.com/qa/local-r4/127-0-0-1-8948__desktop__reduced-motion.png"
+    ],
+    "loadMs": 590,
+    "framePacing": {
+      "frames": 247,
+      "p50": 16.699999999999818,
+      "p95": 16.700000000000728,
+      "over50ms": 0
+    },
+    "dom": {
+      "overflowX": 0,
+      "wide": [],
+      "tinyText": 0,
+      "imgsNoAlt": 0,
+      "brokenImgs": 0,
+      "smallTapTargets": 0,
+      "h1": 1,
+      "ogImage": true,
+      "canvases": 0,
+      "fonts": [
+        "\"Bodoni Moda\"",
+        "Jost"
+      ],
+      "title": "Beauty Year: guess when it was the look"
+    },
+    "axe": [],
+    "consoleErrors": [],
+    "badRequests": []
+  },
+  {
+    "url": "http://127.0.0.1:8948/",
+    "viewport": "lighthouse-mobile",
+    "scores": {
+      "performance": 95,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 66
+    },
+    "LCP": "2.9 s",
+    "CLS": "0",
+    "TBT": "20 ms",
+    "weight": "Total size was 516 KiB",
+    "issues": []
+  }
+]

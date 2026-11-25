@@ -120,6 +120,7 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   await play(p, set.map((r) => r.year));
   ok((await p.textContent('#e-score')) === '500' && /You beat your friend's 250/.test(await p.textContent('#friend')), 'perfect run beats the friend');
   ok(/Curator level/.test(await p.textContent('#e-verdict')), 'perfect run verdict');
+  ok(await p.$eval('#e-object', (e) => !e.hidden && e.complete && e.naturalWidth > 0 && /verdict-curator-400\.webp$/.test(e.getAttribute('src'))), 'r4: curator object sits beside the verdict');
   ok(p.errs.length === 0, 'challenge: no console errors');
   await p.context().close();
 }
@@ -137,7 +138,8 @@ for (const [h, ids] of Object.entries(fixture)) {
 {
   const p = await page(1280, 800);
   await p.goto(base); await p.waitForTimeout(300);
-  ok(await p.locator('link[rel=preload][as=image]').count() === 1 && (await p.getAttribute('link[rel=preload][as=image]', 'href')) === `img/${house()[0].id}.webp`, 'only the first image is preloaded');
+  const pre = await p.$$eval('link[rel=preload][as=image]', (ls) => ls.map((l) => l.getAttribute('href')));
+  ok(pre.length === 2 && pre.includes('img/hero.webp') && pre.includes(`img/${house()[0].id}.webp`), `r3 masthead and the first plate are the only image preloads (${pre})`);
   await play(p, [1850, 1850, 1850, 1850, 1850]);
   ok(await p.evaluate(() => [...document.querySelectorAll('#recap img, #wall img')].every((i) => i.loading === 'lazy')), 'recap and wall images are lazy');
   await p.context().close();
@@ -175,6 +177,26 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   const after = (await p.locator('#panel').boundingBox()).y;
   ok(Math.abs(before - after) < 2, `@${w} panel stays put while the image loads (${Math.round(before)} then ${Math.round(after)})`);
   await p.context().close();
+}
+// r4: verdict objects on the end screen and in the share PNG
+{
+  const p = await page(1280, 800, { acceptDownloads: true });
+  await p.addInitScript(() => { window.__img = []; const di = CanvasRenderingContext2D.prototype.drawImage; CanvasRenderingContext2D.prototype.drawImage = function (im, ...r) { window.__img.push(im && im.src ? im.src : 'canvas'); return di.call(this, im, ...r); }; });
+  await p.goto(`${base}#g=${(987654).toString(36)}`);
+  const set = L.game(987654, false, images, legacyIds).map((i) => images[i]);
+  await play(p, set.map((r) => r.year));
+  const [dl] = await Promise.all([p.waitForEvent('download'), p.click('#save')]);
+  const png = readFileSync(await dl.path());
+  const imgs = await p.evaluate(() => window.__img.join('\n'));
+  ok(png.readUInt32BE(16) === 1080 && png.readUInt32BE(20) === 1350, 'r4 curator card is 1080x1350');
+  ok(/verdict-curator-1024\.webp/.test(imgs), 'r4: curator object is drawn into the share canvas');
+  await p.context().close();
+  const q = await page(390, 844);
+  await q.goto(base);
+  const far = house().map((r) => r.year <= 1860 ? 1940 : 1790);
+  await play(q, far);
+  ok(/Time traveler, lost/.test(await q.textContent('#e-verdict')) && await q.$eval('#e-object', (e) => !e.hidden && /verdict-time-traveler-/.test(e.getAttribute('src'))), 'r4: a low score shows the unmarked compass');
+  await q.context().close();
 }
 // robots.txt
 { const r = await (await fetch(base + 'robots.txt')).text(); ok(/Disallow: \//.test(r), 'robots.txt disallows all'); }

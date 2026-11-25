@@ -1,0 +1,142 @@
+ok   pool has 168 images (120 or more)
+ok   a game gives 5 distinct images
+ok   every one of 4000 games has one image from each of the 5 eras
+ok   all 164 images in new games reachable (164)
+ok   legacy-only images never appear in new games
+ok   two random games share an image 14.8% of the time
+ok   logic: old link #s=l62u.250 gives the same five as the old site
+ok   logic: old link #s=c29l1.250 gives the same five as the old site
+ok   logic: old link #s=1.250 gives the same five as the old site
+ok   logic: old link #s=1z141z3.250 gives the same five as the old site
+ok   logic: old link #s=21i3v9.250 gives the same five as the old site
+ok   new links use #g=, old links keep #s=
+ok   points: exact 100, 10 off 70, floor 0
+ok   readYear("") gives error
+ok   readYear("abcd") gives error
+ok   readYear("185") gives error
+ok   readYear("1789") gives error
+ok   readYear("1941") gives error
+ok   readYear("2026") gives error
+ok   readYear("19.5") gives error
+ok   readYear(" 1900 ") gives year
+ok   readYear("1790") gives year
+ok   readYear("1940") gives year
+ok   decode rejects #s=
+ok   decode rejects #s=0
+ok   decode rejects #s=zzzzzzzz
+ok   decode rejects #s=abc.501
+ok   decode rejects #s=abc.-1
+ok   decode rejects #s=ABC
+ok   decode rejects #garbage
+ok   decode rejects #s=abc.12.3
+ok   decode rejects #s=1z141z4
+ok   decode rejects #g=
+ok   decode rejects #g=0
+ok   decode rejects #x=abc
+ok   decode rejects #g=abc.501
+ok   decode accepts seed with and without score
+ok   every image has a Commons source, license and year
+ok   @390 noindex meta
+ok   @390 for-sale footer link
+ok   @390 no sideways scroll
+ok   @390 lock button in first screen (838 of 844)
+ok   @390 house set first image
+ok   @390 image loaded
+ok   @390 slider arrows update the year box
+ok   @390 typing moves the slider
+ok   @390 arrow up in the year box
+ok   @390 arrow up stops at 1940
+ok   @390 odd input "" shows "Type a year, like 1895." and stays
+ok   @390 odd input "abcd" shows "Type a year, like 1895." and stays
+ok   @390 odd input "18x5" shows "Use four digits, like 1895." and stays
+ok   @390 odd input "1700" shows "Pick a year from 1790 to 1940." and stays
+ok   @390 odd input "2026" shows "Pick a year from 1790 to 1940." and stays
+ok   @390 odd input "123456" shows "Pick a year from 1790 to 1940." and stays
+ok   @390 odd input "-1850" cleaned to 1850 and accepted
+ok   @390 reveal shows real year and guess
+ok   @390 reveal credit with license and source link
+ok   @390 reveal compares to today
+ok   @390 Enter on Next goes to image 2
+ok   @390 exact year gets 100
+ok   @390 off by 1 says "1 year"
+ok   @390 final score 252 matches the logic
+ok   @390 link holds seed and score (#g=c29l1.252)
+ok   @390 recap lists 5
+ok   @390 score card PNG 1080x1350 (beauty-year-252.png)
+ok   @390 copy link gives the challenge link
+ok   @390 no storage or cookies
+ok   @390 new images start a fresh seeded round
+ok   @390 no third-party requests 
+ok   @390 no console errors 
+ok   @1280 noindex meta
+ok   @1280 for-sale footer link
+ok   @1280 no sideways scroll
+ok   @1280 lock button in first screen (749 of 800)
+ok   @1280 house set first image
+ok   @1280 image loaded
+ok   @1280 slider arrows update the year box
+ok   @1280 typing moves the slider
+ok   @1280 arrow up in the year box
+ok   @1280 arrow up stops at 1940
+ok   @1280 odd input "" shows "Type a year, like 1895." and stays
+ok   @1280 odd input "abcd" shows "Type a year, like 1895." and stays
+ok   @1280 odd input "18x5" shows "Use four digits, like 1895." and stays
+ok   @1280 odd input "1700" shows "Pick a year from 1790 to 1940." and stays
+ok   @1280 odd input "2026" shows "Pick a year from 1790 to 1940." and stays
+ok   @1280 odd input "123456" shows "Pick a year from 1790 to 1940." and stays
+ok   @1280 odd input "-1850" cleaned to 1850 and accepted
+ok   @1280 reveal shows real year and guess
+ok   @1280 reveal credit with license and source link
+ok   @1280 reveal compares to today
+ok   @1280 Enter on Next goes to image 2
+ok   @1280 exact year gets 100
+ok   @1280 off by 1 says "1 year"
+ok   @1280 final score 252 matches the logic
+ok   @1280 link holds seed and score (#g=c29l1.252)
+ok   @1280 recap lists 5
+ok   @1280 wall of 5 framed images
+ok   @1280 score card PNG 1080x1350 (beauty-year-252.png)
+ok   @1280 copy link gives the challenge link
+ok   @1280 no storage or cookies
+ok   @1280 new images start a fresh seeded round
+ok   @1280 no third-party requests 
+ok   @1280 no console errors 
+ok   challenge link loads the same five and the friend score
+ok   perfect run beats the friend
+ok   perfect run verdict
+ok   r4: curator object sits beside the verdict
+ok   challenge: no console errors
+ok   old link #s=l62u.250 replays 133,161,109,228,264 and keeps #s=
+ok   old link #s=l62u.250: no console errors
+ok   old link #s=c29l1.250 replays 16,126,278,183,232 and keeps #s=
+ok   old link #s=c29l1.250: no console errors
+ok   old link #s=1.250 replays 34,242,162,160,204 and keeps #s=
+ok   old link #s=1.250: no console errors
+ok   old link #s=1z141z3.250 replays 36,211,204,126,183 and keeps #s=
+ok   old link #s=1z141z3.250: no console errors
+ok   old link #s=21i3v9.250 replays 36,228,185,16,279 and keeps #s=
+ok   old link #s=21i3v9.250: no console errors
+ok   r3 masthead and the first plate are the only image preloads (img/hero.webp,img/n9.webp)
+ok   recap and wall images are lazy
+ok   bad link #s= falls back to the house set
+ok   bad link #s=zzzzzzzz falls back to the house set
+ok   bad link #s=abc.999 falls back to the house set
+ok   bad link #s=0 falls back to the house set
+ok   bad link #garbage falls back to the house set
+ok   bad link #s=abc.-1 falls back to the house set
+ok   bad link #%3Cscript%3E falls back to the house set
+ok   bad link #g= falls back to the house set
+ok   bad link #g=abc.999 falls back to the house set
+ok   bad link #v=abc falls back to the house set
+ok   #about keeps the game and the anchor
+ok   credits list has every image with a source link
+ok   no JS: first image shows
+ok   no JS: says guessing needs JavaScript
+ok   @390 panel stays put while the image loads (580 then 580)
+ok   @1280 panel stays put while the image loads (476 then 476)
+ok   r4 curator card is 1080x1350
+ok   r4: curator object is drawn into the share canvas
+ok   r4: a low score shows the unmarked compass
+ok   robots.txt disallows all
+
+140 passed, 0 failed

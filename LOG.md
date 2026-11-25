@@ -1,3 +1,7 @@
+# DONE 2026-11-25 10:45 AM CT (Gizmo): r4 verdict objects wired beside the score (curator loupe, sharp-eye pince-nez, getting-warmer fan, time-traveler unmarked compass). Share canvas draws the matching object. Local e2e 140/0, local gate 95 / CLS 0 / impeccable 0 at 390 and 1280.
+
+The r3 accessories mast had pushed the lock button below the fold at 390 and 1280×800 (e2e last passed that check at 2:42 AM, before the mast was wired). Modest compaction: phone mast min-height 230 and a slightly shorter plate; short desktops (max-height 860px) use a 400px mast so the lock sits in the first screen (838 of 844 at 390; 749 of 800 at 1280). Taller desktops keep the 560px mast. Copy unchanged. Static impeccable still flags the pre-existing 4.1:1 gold-on-cream "Year" (`#8a6a2c` on `#f3e7d6`). Live deploy pending Pages. noindex kept; no DNS or go-live. Local gate: qa/local-r4/.
+
 # DONE 2026-11-25 8:29 AM CT (Gizmo): B1 copied links (and the share-card host line) use a canonical preview URL on localhost (https://evanmack45.github.io/beautyexhibit-preview/; switch to https://beautyexhibit.com/ at go-live).
 
 # DONE 2026-11-25 7:25 AM CT (Gizmo): Dash art wired — accessories-a masthead, frieze divider, about still life, og.jpg on the share card.
