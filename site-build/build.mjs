@@ -6,7 +6,7 @@ import { game, ERAS, eraOf, ROUNDS, MIN_YEAR, MAX_YEAR, MAX_POINTS } from './src
 
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(here, '..', 'docs');
-const SITE = 'https://evanmack45.github.io/beautyexhibit-preview/';
+const SITE = 'https://beautyexhibit.com/';
 const AFTERNIC = 'https://www.afternic.com/domain/beautyexhibit.com';
 const DEFAULT_SEED = 20261125;
 const raw = JSON.parse(readFileSync(join(here, 'data/images.json'), 'utf8'));
@@ -41,7 +41,8 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="${SITE}">
+<meta property="og:url" content="${SITE}">
 <title>Beauty Year: guess when it was the look</title>
 <meta name="description" content="Five old fashion plates from the 1790s to the 1930s. Guess the year of each one, then see the real date and the credit.">
 <meta property="og:title" content="Beauty Year">
@@ -147,6 +148,8 @@ for (const f of ['style.css', 'app.js', 'logic.js']) copyFileSync(join(here, 'sr
 for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 'src/fonts', f), join(out, 'fonts', f));
 for (const f of readdirSync(join(here, 'src/img'))) copyFileSync(join(here, 'src/img', f), join(out, 'img', f));
 copyFileSync(join(here, 'src/img/og.jpg'), join(out, 'og.jpg'));
-writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url></urlset>\n`);
+writeFileSync(join(out, 'CNAME'), 'beautyexhibit.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: ${images.length} images (${JSON.stringify(byLicense)}), per era ${perEra}, default seed ${DEFAULT_SEED}`);
