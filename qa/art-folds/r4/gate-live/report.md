@@ -1,0 +1,19 @@
+# Visual QA gate
+
+Result: PASS (no P0)
+
+## https://evanmack45.github.io/beautyexhibit-preview/ — phone
+Load 762ms · frames p50 16.7ms p95 16.8ms · fonts "Bodoni Moda" / Jost · canvases 0
+- no issues
+Shots: evanmack45-github-io-beautyexhibit-preview__phone__fold.png, evanmack45-github-io-beautyexhibit-preview__phone__scroll025.png, evanmack45-github-io-beautyexhibit-preview__phone__scroll050.png, evanmack45-github-io-beautyexhibit-preview__phone__scroll075.png, evanmack45-github-io-beautyexhibit-preview__phone__scroll100.png, evanmack45-github-io-beautyexhibit-preview__phone__full.png, evanmack45-github-io-beautyexhibit-preview__phone__reduced-motion.png
+
+## https://evanmack45.github.io/beautyexhibit-preview/ — desktop
+Load 656ms · frames p50 16.7ms p95 16.8ms · fonts "Bodoni Moda" / Jost · canvases 0
+- no issues
+Shots: evanmack45-github-io-beautyexhibit-preview__desktop__fold.png, evanmack45-github-io-beautyexhibit-preview__desktop__scroll025.png, evanmack45-github-io-beautyexhibit-preview__desktop__scroll050.png, evanmack45-github-io-beautyexhibit-preview__desktop__scroll075.png, evanmack45-github-io-beautyexhibit-preview__desktop__scroll100.png, evanmack45-github-io-beautyexhibit-preview__desktop__full.png, evanmack45-github-io-beautyexhibit-preview__desktop__reduced-motion.png
+
+## https://evanmack45.github.io/beautyexhibit-preview/ — lighthouse-mobile
+Lighthouse: {"performance":100,"accessibility":100,"best-practices":100,"seo":63} LCP 1.5 s CLS 0 TBT 50 ms weight Total size was 418 KiB
+- no issues
+
+Human/AI review still required: look at every *__fold.png and *__scroll*.png. This gate catches breakage, not blandness.
