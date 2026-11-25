@@ -43,9 +43,9 @@ const html = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Beauty Year: guess when it was the look</title>
-<meta name="description" content="Five old fashion plates, ads and magazine covers. Guess the year of each one, then see the real date and the credit.">
+<meta name="description" content="Five old fashion plates from the 1790s to the 1930s. Guess the year of each one, then see the real date and the credit.">
 <meta property="og:title" content="Beauty Year">
-<meta property="og:description" content="Guess the year of five old beauty images. How close can you get?">
+<meta property="og:description" content="Guess the year of five old fashion plates. How close can you get?">
 <meta property="og:image" content="${SITE}og.png">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#1a1411">
@@ -63,7 +63,7 @@ const html = `<!doctype html>
 <main class="room" id="room" data-seed="${DEFAULT_SEED}">
   <div class="intro">
     <h1>Beauty <i>Year</i></h1>
-    <p class="lede">Five old fashion plates, ads and covers. Guess the year each one came out.</p>
+    <p class="lede">Five old fashion plates, one from each era between the 1790s and the 1930s. Guess the year each one came out.</p>
     <p class="friend" id="friend-top" hidden></p>
   </div>
   <figure class="piece" id="piece">
