@@ -36,6 +36,7 @@ const first = images[game(DEFAULT_SEED, false, images, legacyIds)[0]];
 const byLicense = images.reduce((a, r) => ({ ...a, [r.license]: (a[r.license] || 0) + 1 }), {});
 const credit = (r) => `${esc(r.title)}${r.artist && r.artist !== r.holder ? `, ${esc(r.artist)}` : ''}${r.holder ? `, ${esc(r.holder)}` : ''}`;
 
+const APP_LD = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Beauty Year', url: SITE, description: 'Five old fashion plates from the 1790s to the 1930s. Guess the year of each one, then see the real date and the credit.', applicationCategory: 'GameApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -52,6 +53,7 @@ const html = `<!doctype html>
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="A Regency bonnet, a plumed lace hat and a 1920s cloche in a triangle above a lace fan and glove, hand-coloured on aged paper.">
 <meta property="og:type" content="website">
+<script type="application/ld+json">${JSON.stringify(APP_LD)}</script>
 <link rel="preload" as="image" href="img/hero.webp" imagesrcset="img/hero-800.webp 800w, img/hero.webp 1280w, img/hero-1920.webp 1920w" imagesizes="100vw">
 <meta name="theme-color" content="#1a1411">
 <link rel="preload" href="fonts/bodoni.woff2" as="font" type="font/woff2" crossorigin>
@@ -141,15 +143,70 @@ const html = `<!doctype html>
 </html>
 `;
 
+
+// ---- /fashion-plates-by-decade/: one plate per decade, with the game's own cue and credit ----
+const DEC = '/fashion-plates-by-decade/';
+const decades = [...new Set(images.map((r) => Math.floor(r.year / 10) * 10))].sort((a, b) => a - b);
+const pickFor = (dec) => images.filter((r) => !r.legacyOnly && Math.floor(r.year / 10) * 10 === dec).sort((a, b) => Math.abs(a.year - (dec + 5)) - Math.abs(b.year - (dec + 5)) || String(a.id).localeCompare(String(b.id)))[0];
+const decRows = decades.map((d) => ({ d, r: pickFor(d) }));
+if (decRows.some((x) => !x.r || !x.r.look || !x.r.source || !x.r.license)) throw new Error('a decade has no creditable plate');
+const decAnswer = `Look at the waist, the sleeves and the hat, then check the year. Below is one plate from each decade, ${decades[0]}s to ${decades.at(-1)}s, with the cue the game gives for it and its credit.`;
+const decLD = { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Fashion plates by decade, 1790s to 1930s', url: SITE + 'fashion-plates-by-decade/', description: decAnswer, isPartOf: { '@type': 'WebSite', name: 'Beauty Exhibit', url: SITE }, mainEntity: { '@type': 'ItemList', numberOfItems: decRows.length, itemListElement: decRows.map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: x.r.title, url: x.r.source })) } };
+const decHTML = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="${SITE}fashion-plates-by-decade/">
+<meta property="og:url" content="${SITE}fashion-plates-by-decade/">
+<title>Fashion plates by decade, 1790s to 1930s | Beauty Exhibit</title>
+<meta name="description" content="One old fashion plate for each decade from the 1790s to the 1930s, with the cue to look for and the credit. Then guess the year in the game.">
+<meta property="og:title" content="Fashion plates by decade">
+<meta property="og:description" content="One plate per decade, 1790s to 1930s, with its credit.">
+<meta property="og:image" content="${SITE}og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A Regency bonnet, a plumed lace hat and a 1920s cloche in a triangle above a lace fan and glove, hand-coloured on aged paper.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">${JSON.stringify(decLD)}</script>
+<meta name="theme-color" content="#1a1411">
+<link rel="preload" href="../fonts/bodoni.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='5' y='3' width='22' height='26' fill='%23c9a46a'/%3E%3Crect x='9' y='7' width='14' height='18' fill='%23c8203a'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../">Beauty <i>Exhibit</i></a>
+  <a class="toplink" href="../">Play the game</a>
+</header>
+<main class="dec">
+  <h1>Fashion plates by <i>decade</i></h1>
+  <p class="dec-a" id="dec-answer">${decAnswer}</p>
+  <ol class="dec-list" id="dec-list">
+${decRows.map(({ d, r }, i) => `    <li><a class="dec-img" href="${esc(r.source)}"><img src="../img/${r.id}.webp" width="${r.w}" height="${r.h}" alt="${esc(r.look)}" ${i < 2 ? '' : 'loading="lazy" '}decoding="async"></a><div><p class="dec-y"><b>${d}s</b> <span>${r.year}</span></p><p class="dec-look">${esc(r.look)}</p><p class="dec-cr"><a href="${esc(r.source)}">${credit(r)}</a>. ${esc(r.license)}.</p></div></li>`).join('\n')}
+  </ol>
+  <p><a class="btn hot dec-go" href="../">Guess the year of five plates</a></p>
+</main>
+<footer class="foot">
+  <p>Images from Wikimedia Commons. Beauty Exhibit is a small game, not linked to any brand shown.</p>
+  <p><a href="${AFTERNIC}">This domain is for sale.</a></p>
+</footer>
+</body>
+</html>
+`;
+
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'fonts'), { recursive: true }); mkdirSync(join(out, 'img'), { recursive: true });
 writeFileSync(join(out, 'index.html'), html);
+mkdirSync(join(out, 'fashion-plates-by-decade'), { recursive: true });
+writeFileSync(join(out, 'fashion-plates-by-decade/index.html'), decHTML);
 for (const f of ['style.css', 'app.js', 'logic.js']) copyFileSync(join(here, 'src', f), join(out, f));
 for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 'src/fonts', f), join(out, 'fonts', f));
 for (const f of readdirSync(join(here, 'src/img'))) copyFileSync(join(here, 'src/img', f), join(out, 'img', f));
 copyFileSync(join(here, 'src/img/og.jpg'), join(out, 'og.jpg'));
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
-writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url></urlset>\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url><url><loc>${SITE}fashion-plates-by-decade/</loc></url></urlset>\n`);
 writeFileSync(join(out, 'CNAME'), 'beautyexhibit.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: ${images.length} images (${JSON.stringify(byLicense)}), per era ${perEra}, default seed ${DEFAULT_SEED}`);

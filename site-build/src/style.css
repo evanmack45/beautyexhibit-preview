@@ -236,3 +236,19 @@ h1 i { color: var(--gold); font-style: normal; font-weight: 500; }
   .still { width: 140px; }
   .mast-copy { padding-bottom: 72px; }
 }
+
+/* ---------- /fashion-plates-by-decade/ ---------- */
+.dec { max-width: 760px; margin: 0 auto; padding: 8px 20px 32px; }
+.dec h1 { font-size: clamp(34px, 8vw, 52px); }
+.dec-a { color: #e4d6c3; max-width: 36em; margin: 12px 0 20px; font-size: 18px; }
+.dec-list { list-style: none; margin: 0 0 22px; padding: 0; }
+.dec-list li { display: grid; grid-template-columns: 96px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid rgba(201, 164, 106, 0.25); align-items: start; }
+.dec-img { display: block; background: var(--cream); padding: 4px; border: 2px solid var(--gold); line-height: 0; }
+.dec-img img { display: block; width: 100%; height: auto; background: #d9cbb7; }
+.dec-list p { margin: 0; }
+.dec-y b { font: 600 26px/1 var(--display); color: var(--gold); }
+.dec-y span { color: var(--mute); font-size: 14px; margin-left: 6px; }
+.dec-look { margin: 4px 0 6px !important; color: var(--cream); }
+.dec-cr { font-size: 14px; color: var(--mute); }
+.dec-go { display: inline-block; text-decoration: none; text-align: center; }
+@media (min-width: 700px) { .dec-list li { grid-template-columns: 140px 1fr; gap: 24px; } }
