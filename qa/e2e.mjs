@@ -209,6 +209,44 @@ for (const [w, h] of [[390, 844], [1280, 800]]) {
   ok(/Time traveler, lost/.test(await q.textContent('#e-verdict')) && await q.$eval('#e-object', (e) => !e.hidden && /verdict-time-traveler-/.test(e.getAttribute('src'))), 'r4: a low score shows the unmarked compass');
   await q.context().close();
 }
+
+// SEO fix list (Compass 11/25), row 3: no two text lines on the share PNG overlap, across many games
+for (const seedN of [987654, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) {
+  const t = await page(390, 844, { acceptDownloads: true });
+  await t.addInitScript(() => { window.__bx = []; const o = CanvasRenderingContext2D.prototype.fillText; CanvasRenderingContext2D.prototype.fillText = function (s, x, y, ...r) { const m = this.measureText(String(s)); const a = this.textAlign; const w = m.width; const x0 = a === 'center' ? x - w / 2 : a === 'right' || a === 'end' ? x - w : x; window.__bx.push({ s: String(s), l: x0, r: x0 + w, t: y - m.actualBoundingBoxAscent, b: y + m.actualBoundingBoxDescent }); return o.call(this, s, x, y, ...r); }; });
+  await t.goto(`${base}#g=${seedN.toString(36)}`);
+  const gm = L.game(seedN, false, images, legacyIds).map((i) => images[i]);
+  await play(t, gm.map((r) => r.year));
+  await Promise.all([t.waitForEvent('download'), t.click('#save')]);
+  const bx = await t.evaluate(() => window.__bx);
+  const hits = [];
+  for (let i = 0; i < bx.length; i++) for (let j = i + 1; j < bx.length; j++) { const A = bx[i], B = bx[j]; if (A.l < B.r - 1 && B.l < A.r - 1 && A.t < B.b - 1 && B.t < A.b - 1) hits.push(`${A.s} / ${B.s}`); }
+  ok(bx.length > 10 && hits.length === 0, `share card seed ${seedN}: no overlapping text (${bx.length} lines)${hits.length ? ': ' + hits.slice(0, 3).join(' | ') : ''}`);
+  await t.context().close();
+}
+
+// SEO fix list (Compass 11/25): WebApplication JSON-LD, decade page, sitemap
+{
+  const q = await page(390, 844);
+  await q.goto(base);
+  const ld = await q.$$eval('script[type="application/ld+json"]', (e) => e.map((x) => JSON.parse(x.textContent)));
+  ok(ld.length === 1 && ld[0]['@type'] === 'WebApplication' && ld[0].applicationCategory === 'GameApplication' && ld[0].offers.price === '0' && ld[0].url === origin + '/' && ld[0].name && ld[0].description, 'home JSON-LD: WebApplication, GameApplication, price 0, name, url, description');
+  const dUrl = new URL('fashion-plates-by-decade/', base).href;
+  const r = await q.goto(dUrl, { waitUntil: 'networkidle' });
+  ok(r.status() === 200 && (await q.getAttribute('link[rel=canonical]', 'href')) === origin + '/fashion-plates-by-decade/', 'decade page returns 200 with its own canonical');
+  const rows = await q.$$eval('#dec-list li', (l) => l.map((li) => ({ href: li.querySelector('.dec-cr a')?.href, cr: li.querySelector('.dec-cr')?.textContent.trim(), alt: li.querySelector('img')?.alt, yr: li.querySelector('.dec-y span')?.textContent, dec: li.querySelector('.dec-y b')?.textContent })));
+  const decs = [...new Set(images.map((r) => Math.floor(r.year / 10) * 10))].sort();
+  ok(rows.length === decs.length && rows.every((x, i) => x.dec === decs[i] + 's' && String(Math.floor(+x.yr / 10) * 10) === String(decs[i])), `decade page has one plate for each of the ${decs.length} decades, year inside its decade`);
+  ok(rows.every((x) => images.some((im) => im.source === x.href && x.cr.includes(im.license) && x.alt === im.look)), 'every plate on the decade page has a Commons credit link, a license and its game cue');
+  const ans = (await q.textContent('#dec-answer')).trim();
+  const words = (await q.evaluate(() => document.body.innerText)).trim().split(/\s+/).length;
+  ok(ans.split(/\s+/).length <= 60 && words <= 450, `decade page: first answer ${ans.split(/\s+/).length} words (max 60), page ${words} words (max 450)`);
+  ok((await q.$$eval('script[type="application/ld+json"]', (e) => e.length)) === 1 && (await q.$$eval('a.dec-go', (a) => new URL(a[0].href).pathname)) [0] === '/', 'decade page: one JSON-LD block, links back to the game');
+  const sm = await q.evaluate(async (u) => (await fetch(u, { cache: 'no-store' })).text(), new URL('sitemap.xml', base).href);
+  ok(sm.includes(`<loc>${origin}/</loc>`) && sm.includes(`<loc>${origin}/fashion-plates-by-decade/</loc>`), 'sitemap lists the home and the decade page');
+  await q.context().close();
+}
+
 // robots.txt
 { const r = await (await fetch(base + 'robots.txt')).text(); ok(/Allow: \//.test(r) && /Sitemap:/.test(r), 'robots.txt allows all and names the sitemap'); }
 await b.close();
